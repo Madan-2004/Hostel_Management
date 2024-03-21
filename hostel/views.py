@@ -3,7 +3,7 @@ from django.http import HttpResponse , HttpResponseRedirect
 from .models import Room, Booking
 # from .models import Hotels,Rooms,Reservation
 from django.contrib import messages
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate,login as auth_login,logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from hostel.booking_functions.availability import check_availability
@@ -21,31 +21,20 @@ def index(request):
     return render(request, 'index.html')
 
 def login(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-        user = authenticate(username = email, password = password)
+        user = authenticate(request,username=username,password=password)
 
-        try:
-            if user.is_staff:
-                messages.warning(request, 'Incorrect username or password')
-                return redirect('login')
-        except:
-            pass
-
-        if user is not None:
-            login(request,user)
-            messages.success(request,"successful logged in")
-            print("Login successfull")
-            return redirect('/')
-        
+        if user is not None and user.is_active:
+            auth_login(request,user)
+            return render(request,'index.html')
         else:
-            messages.warning(request,"Incorrect username or password")
-            return redirect('login')
+            messages.error(request,'Invalid Credentials')
+    return render(request, "login.html")  
 
-    return render(request, 'login.html')
-
+@login_required(login_url='/login/')
 def stays(request):
     if request.method == 'POST':
         check_in = request.POST.get('cin')
@@ -82,6 +71,7 @@ def stays(request):
 
     return render(request, "stays.html")
 
+@login_required(login_url='/login/')
 def bookings(request):
     return render(request, "bookings.html")
 
@@ -132,3 +122,9 @@ def book_room(request):
         'category': category,
         'available_room_nos': available_room_nos
     })
+
+
+def logout(request):
+    if request.user.is_authenticated:
+        auth_logout(request)
+    return render(request,'index.html') 

@@ -66,7 +66,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-LOGIN_REDIRECT_URL = '/stays/'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,18 +79,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware'
 ]
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
-        'APP': {
-            'client_id': os.environ.get('client_id'),
-            'secret': os.environ.get('secret'),
-            'key': ''
-        }
-    }
-}
+
 
 ROOT_URLCONF = 'hostel_management.urls'
 
@@ -109,6 +98,21 @@ TEMPLATES = [
         },
     },
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': os.environ.get('client_id'),
+            'secret': os.environ.get('secret'),
+            'key': ''
+        }
+    }
+}
+
+LOGIN_REDIRECT_URL = '/stays/'
 
 WSGI_APPLICATION = 'hostel_management.wsgi.application'
 

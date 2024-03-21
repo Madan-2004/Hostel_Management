@@ -210,7 +210,11 @@
         <h2>IIT Indore Hostels - Guest House Bookings</h2>
       </div>
       <div classs="d2">
-        <a href='{% url "login" %}'><button> <i class="fa-solid fa-user"></i> Login</button></a>
+        {% if user.is_authenticated %}
+        <a href='{% url "logout" %}'><button> <i class="fa-solid fa-user"></i>Logout</button></a>
+        {% else %}
+        <a href='{% url "login" %}'><button> <i class="fa-solid fa-user"></i>Login</button></a>
+        {% endif %}
       </div>
     </div>
 
