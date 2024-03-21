@@ -1,0 +1,39 @@
+{% load static %}
+{% load socialaccount %}
+{% load i18n account %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hostel Portal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" />
+</head>
+
+<body class="bg-gray-100 text-gray-700 flex items-center justify-center h-screen">
+    <div class="text-center">
+        <div class="font-bold text-2xl mb-4">
+            Welcome to the login portal of Hostel website
+        </div>
+        <div class="mb-4">
+            <p>Continue using Institute Id</p>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <i class="fa fa-sign-in"></i> {% trans "Sign In" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+        <!-- Button to redirect to student_details.html page -->
+        {% comment %} <a href="{% url 'student-details' %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">View Student Details</a> {% endcomment %}
+    </div>
+</body>
+
+</html>
