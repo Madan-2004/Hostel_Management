@@ -1,0 +1,755 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <title>Stays</title>
+    <!-- <style>
+      /*  :root{
+            --primary-color: #000;
+            --secondary-color: rgb(30,144,255);
+          } */
+  
+         /* body{
+              background-image: url("{% static 'hostel.jpg' %}");
+              background-size: cover;
+              background-position: center;
+              background-repeat: no-repeat;
+              height: 100vh;
+              backdrop-filter: blur(1.5px);
+          }*/
+  
+          
+          .form form{
+            display: flex;
+            margin: 20px auto;
+            width: 40%;
+            flex-direction: column;
+            height: 100%;
+            padding: 50px;
+            box-shadow: 0px 0px 10px #000;
+          }
+    
+          .form form input{
+            margin: 20px 0px;
+            height: 50px;
+            border: 0;
+            outline: none;
+            border-bottom: 1px solid rgb(122,117,117);
+            font-size: 20px;
+          }
+    
+          .form form input:focus{
+            border-bottom: 2px solid var(--secondary-color);
+          }
+    
+          .form form .label{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+          }
+    
+          .form form .label label{
+            width: 60%;
+            color: var(--secondary-color);
+          }
+    
+          .form form .label input{
+            width: 40%;
+            cursor: pointer;
+          }
+    
+          .form form button{
+            height: 50px;
+            font-size: 20px;
+            padding: 10px;
+            margin: 30px auto;
+            width: 150px;
+            cursor: pointer;
+            border: 0;
+            outline: none;
+            border-radius: 30px;
+            background-color: #fff;
+            color: var(--secondary-color);
+            font-weight: 400;
+            transition: 0.3s ease-in-out;
+            position: relative;
+            box-shadow: 6px 6px 1px -1px rgba(0, 0, 0, 0.15),
+                        -6px -6px 10px -1px rgba(255, 255, 255, 0.7);        
+          }
+    
+          form button:hover{
+                color: #fff;
+                box-shadow: 6px 6px 1px -1px rgba(72,68,163,0.2),
+                            -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+                z-index: 2;
+            }
+        
+            form button:hover::before{
+                content: '';
+                height: 100%;
+                position: absolute;
+                width: 100%;
+                left: 0px;
+                top: 0px;
+                background-color: var(--secondary-color);
+                color: #fff;
+                animation: btn 0.3s linear forwards;
+                border-radius: 30px;
+                opacity: 1;
+                z-index: -2;
+            }
+        
+            @keyframes btn{
+                0%{
+                    width: 0%;
+                }
+                50%{
+                    width: 50%;
+                }
+                100%{
+                    width: 100%;
+                }
+            }
+    
+            .fa-solid.fa-wand-magic-sparkles{
+              margin-left: 5px;
+            }
+        
+            .form-title{
+              width: 125%;
+              text-align: center;
+              height: 60px;
+              background-color: var(--secondary-color);
+              margin-left: -12.5%;
+              margin-top: -30px;
+              padding: 20px;
+              color: #fff;
+              box-shadow: 0px 0px 10px var(--secondary-color);
+            }
+    
+            @media (max-width: 1000px){
+              .form form{
+                width: 60%;
+              }
+            }
+    
+            @media (max-width: 700px){
+              .form form{
+                width: 80%;
+              }
+
+              .nav1{
+                display: none;
+              }
+            }
+
+    </style> -->
+    <!-- <style>
+      .title{
+        margin: 50px 0px;
+        text-align: center;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .title h3{
+        text-align: center;
+        color: var(--secondary-color);
+        font-size: 30px;
+        width: 40%;
+        line-height: 40px;
+      }
+
+      .form{
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        min-height: 40vh;
+      }
+
+      .form form{
+        display: flex;
+        width: 60%;
+        justify-content: space-around;
+        align-items: center;
+        border: 1px solid black;
+        padding: 20px;
+      }
+
+      .input{
+        border-right: 1px solid gray;
+      }
+    </style> -->
+    <style>
+      /*body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        background: #DEE0E1;
+        font-family: "Ubuntu", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 16px;
+      }*/
+
+      .body{
+        min-height: 65vh;
+        padding-bottom: 20px;
+      }
+
+      .title{
+        margin: 50px 0px;
+        text-align: center;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .title h3{
+        text-align: center;
+        color: var(--secondary-color);
+        font-size: 30px;
+        width: 40%;
+        line-height: 40px;
+      }
+
+      *, *::before, *::after {
+          padding: 0;
+          margin: 0;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          outline: none;
+          user-select: none;
+          -webkit-user-drag: none;
+          -moz-user-select: none;
+          -webkit-user-select: none;
+          -ms-user-select: none;
+          box-sizing: border-box;
+          transition: all 0.3s ease-in-out, margin 0.3s ease;
+          -webkit-transition: all 0.3s ease-in-out, margin 0.3s ease;
+      }
+      
+      /* RESET FORM ELEMENTS */
+      .input-container input[type="date"],
+      .input-container input[type="text"],
+      .input-container input[type="number"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background: transparent;
+        border: none;
+        outline: none;
+        box-shadow: none;
+      }
+      
+      /* INPUT CONTAINER  */
+      .input-container{
+        display:flex;
+        flex-direction: column;
+        width: auto;
+        height: auto;
+        width: 16%;
+        height: 60px;
+        padding: 5px 10px 10px 10px;
+        background: #fff;
+        border-radius: 8px;
+        border: 1.5px solid var(--secondary-color);
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .input-container:hover, 
+      .input-container:focus,
+      .input-container:active {
+        transform: scale(1.1);
+        -webkit-transform: scale(1.1);
+      }
+      
+      .input-container label{
+        position: relative;
+        width: 100%;
+        font-family: "Segoe UI";
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        line-height: 20px;
+        color: #09f;
+        margin-left: 2px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .input-container input, .input-container select{
+        position: relative;
+        align-items: center;
+        width: auto;
+        height: auto;
+        font-weight: 600;
+        font-size: 15px;
+        letter-spacing: 0.05em;
+        line-height: 21px;
+        text-transform: uppercase;
+        margin-left: 0px;
+      }
+
+      .input-container select{
+        font-size: 15px;
+        padding: 5px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .input-container select::placeholder{
+        color: gray;
+      }
+
+      input#rooms{
+        border: none;
+        width: 100px;
+      }
+
+      input#rooms::placeholder{
+        font-size: 15px;
+        padding: 5px;
+      }
+      
+      /* BUTTON CONTAINER */
+      .button-container {
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        width: 16%;
+        height: 65px;
+        padding: 1px;
+        padding-bottom: 2px;
+        background: #09f;
+        border-radius: 10px;
+        filter: drop-shadow(0px 0px 3px #000);
+        -webkit-filter: drop-shadow(0px 0px 3px #000);
+        overflow: hidden;
+        cursor:pointer;
+      }
+      .button-container:hover, 
+      .button-container:focus {
+        background: #09f;
+        filter: drop-shadow(0px 0px 3px #09f);
+        -webkit-filter: drop-shadow(0px 0px 3px #09f);
+      }
+      /* -- button -- */
+      .button-container .button {
+        position: relative;
+        width: 100%;
+        min-height: 63px;
+        height:auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #fff;
+        color: #000;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        font-size: 18px;
+        cursor: pointer;
+      }
+      .button-container:hover .button:hover  {
+        background: #000;
+        color: #fff;
+      }
+      .button-container:hover .button:active  {
+        background: #000;
+        color: #fff;
+        background: #09f;
+        filter: drop-shadow(0px 0px 3px #09f);
+        -webkit-filter: drop-shadow(0px 0px 3px #09f);
+      }
+      /* -- button ok -- */
+      .button-container .button.ok {
+        background: #131313;
+        color: #fff;
+      }
+      .button-container:hover .button.ok:hover {
+        background: #131313;
+        color: #09f;
+        text-shadow: 0px 0px 10px #09f;
+        -webkit-text-shadow: 0px 0px 10px #09f;
+      }
+      .button-container:hover .button.ok:active  {
+        color: #fff;
+        background: #09f;
+        filter: drop-shadow(0px 0px 3px #000);
+        -webkit-filter: drop-shadow(0px 0px 3px #000);
+      }
+      
+      /* RESERVATION BOX */
+      .reservation-box form{
+        display:flex;
+        align-items: center;
+        gap: 20px;
+        height: auto;
+        padding: 10px;
+        border-radius: 7px;
+        background-color: #fff;
+        width: 80%;
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
+        margin: 30px auto;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+      .reservation-box .static {
+        position:relative;
+        display: flex;
+        align-items: center;
+        float:left;
+        width: auto;
+        margin-right: 20px;
+      }
+      .reservation-box .flex {
+        position:relative;
+        display: flex;
+        float:left;
+        flex-direction: table;
+        align-items: center;
+        gap:20px;
+        width:auto;
+      }
+      .reservation-box .top {
+        display: flex;
+        flex-direction: table;
+      }
+      .reservation-box .bottom {
+        position:relative;
+        width: 100%;
+        text-align: right; 
+      }
+       
+      .reservation-box form .info {
+        width: auto;
+        color: #000;
+        font-weight:500;
+        text-decoration: none;
+        text-align: right;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+      }
+      .reservation-box .info:hover,
+      .reservation-box .info:focus,
+      .reservation-box .info:active {
+        color: #000;
+        border-bottom: 2px solid #09f;
+      }
+      
+      /* RESERVATION BOX SMALL */
+      .reservation-box.small, .reservation-box.small .flex {
+        flex-direction: column;
+      }
+      .reservation-box.small .top {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .reservation-box.small .static {
+        margin-right: 0px;
+      } 
+      .reservation-box.small .bottom {
+        text-align: center;
+      }
+      .reservation-box.small .button-container {min-width: 217px;}
+
+      .result{
+        text-align: center;
+        font-size: 18px;
+        color: red;
+      }
+      
+      /* ------------ Testkit ------------ */
+      /*.test {
+        position: absolute;
+        top:30px;
+        left: 30px;
+        width: 66px;
+        height: 66px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid #000;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .test svg {
+        rotate: 0deg;
+      }
+      .test svg path{
+        fill: #000;
+      }
+      .test:hover {
+        background: rgba(255,255,255,1);
+      }
+      .test.small svg {
+        rotate: 90deg;
+      }*/
+      @media (max-width: 1230px){
+        .reservation-box form{
+          margin: auto;
+          width: 80%;
+        }
+        .input-container{
+          width: 16%;
+        }
+        .button-container{
+          width: 16%;
+        }
+      }
+
+      @media (max-width: 1050px){
+        .title{
+          margin: 50px 0px;
+          text-align: center;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+  
+        .title h3{
+          text-align: center;
+          color: var(--secondary-color);
+          font-size: 30px;
+          width: 60%;
+          line-height: 40px;
+        }
+
+        .reservation-box form{
+          margin: auto;
+          width: 70%;
+          justify-content: flex-start;
+        }
+        .input-container{
+          width: 30%;
+        }
+        .button-container{
+          width: 20%;
+        }
+      }
+
+      @media (max-width: 800px){
+        .title{
+          margin: 50px 0px;
+          text-align: center;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+  
+        .title h3{
+          text-align: center;
+          color: var(--secondary-color);
+          font-size: 30px;
+          width: 70%;
+          line-height: 40px;
+        }
+
+        .reservation-box form{
+          margin: auto;
+          width: 70%;
+          justify-content: flex-start;
+        }
+        .input-container{
+          width: 47%;
+        }
+        .button-container{
+          width: 30%;
+          margin: auto;
+        }
+      }
+
+      @media (max-width: 700px){
+        .reservation-box form{
+          margin: auto;
+          width: 60%;
+          justify-content: flex-start;
+        }
+        .input-container{
+          width: 100%;
+          border: 1.5px solid var(--secondary-color);
+        }
+        .button-container{
+          width: 50%;
+          margin: 10px auto;
+        }
+      }
+
+      @media (max-width: 600px){
+        .button-container{
+          width: 100%;
+        }
+      }
+    </style>
+</head>
+<body>
+  <div class="nav1">
+    <div>
+      <h3>IIT Indore</h3>
+    </div>
+
+    <div class="headings">
+      <a href="/">Home</a>
+      <a href="/stays" class="active">Stays</a>
+      <a href="/bookings">Your Bookings</a>
+    </div>
+      
+      <div class="nav1-login">
+        <!-- <a href="/login">Sign up</a> -->
+        <a href="/login">Login</a>
+      </div>
+  </div>
+
+  <!-- Responsive navbar -->
+  <div class="navbar2">
+      <div class="ham">
+        <p><i class="fa-solid fa-bars"></i></p>
+      </div>
+      <!-- <div class="title">
+        <a href="/" class="lo">
+          <img src="" class="logo">
+          <h3>IIT Indore</h3>
+        </a>
+    </div> -->
+  </div>
+  <div class="side-bar">
+      <div id="close"><i class="fa-solid fa-xmark"></i></div>
+      <ul>
+          <li><a href="/" class="active">Home</a></li>
+          <li><a href="/stays">Stays</a></li>
+          <li><a href="/bookings">Your Bookings</a></li>
+          <li><a href="/login">Login</a></li>
+      </ul>
+  </div>
+
+      <!-- <div class="form">
+        <form action="/" method="post">
+            {% csrf_token %}
+            <h3 class="form-title">Book Rooms</h3>
+            <input type="text" id="name" name="name" placeholder="Name" required>
+    
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            
+            <div class="label">
+                <label for="checkin">Check-in Date:</label>
+                <input type="date" id="checkin" name="checkin" required>
+            </div>
+
+            <div class="label">
+                <label for="checkout">Check-out Date:</label>
+                <input type="date" id="checkout" name="checkout" required>
+            </div>
+    
+            <input type="number" id="rooms" name="rooms" placeholder="Number of Rooms" min="1" required>
+    
+            <textarea id="requests" name="requests" placeholder="Special Requests" rows="4"></textarea>
+    
+            <button type="submit">Book Room</button>
+        </form>
+      </div> -->
+
+      <!-- <div class="title">
+        <h3>Welcome to IIT Indore Hostels & Guest-House Bookings</h3>
+      </div>
+
+      <div class="form">
+        <form action="/" method="post">
+          {% csrf_token %}
+          <div class="input">
+            <input type="date" id="checkin" name="checkin" required>
+          </div>
+          <div class="input">
+            <input type="date" id="checkout" name="checkout" required>
+          </div>
+          <div class="input">
+            <input type="number" id="rooms" name="rooms" placeholder="Number of Rooms" min="1" required>
+          </div>
+          <div class="button">
+            <button type="submit">Book Room</button>
+          </div>
+        </form>
+      </div> -->
+
+      <div class="body">
+        <div class="title">
+          <h3>Welcome to IIT Indore Hostels & Guest-House Bookings</h3>
+          <!-- <h4>We Are Open For Reservations!</h4> -->
+        </div>
+
+        <div class="reservation-box">
+          
+              <form action="" method="POST">
+                {% csrf_token %}
+                {% load app_tags %}
+                <div class="input-container" id="date-picker-container">
+                    <label for="date-checkin"><i class="fa-solid fa-right-to-bracket"></i> check-in</label>
+                    <input type="date" id="date-checkin" class="date-field" name="cin" min={%todays_date%} max={% max_date %} aria-label="Search" required="True">
+                </div>
+
+                <div class="input-container" id="date-picker-container">
+                  <label for="date-checkout"><i class="fa-solid fa-right-from-bracket"></i> check-out</label>
+                  <input type="date" id="date-checkout" class="date-field" name="cout" min={% tomorrow %} max = {%max_date %} aria-label="Search" required="True">
+                </div>
+
+                <div class="input-container" class="norooms">
+                  <label for="rooms"><i class="fa-solid fa-bed"></i> Rooms</label>
+                  <input type="number" id="rooms" name="capacity" placeholder="Rooms" min="1" max="20" required>
+                </div>
+                <div class="input-container" class="norooms">
+                  <label for="room-type"><i class="fa-solid fa-hotel"></i> Room type</label>
+                  <select name="room_type" id="room-type">
+                    <option value="1">Type-1</option>
+                    <option value="2">Type-2</option>
+                  </select>            
+                </div>
+              <!-- </div> -->
+                <div class="button-container">
+                  <!-- <span class="button ok"><i class="fa-solid fa-magnifying-glass"></i></span> -->
+                  <button type="submit" class="button ok">Search</button>
+                </div>
+              </form>
+        </div>
+      </div>
+      
+
+      <footer>
+        <div class="footer">
+          <div class="info">
+            <h4>IIT Indore</h4>
+          </div>
+          <div class="social">
+            <ul>
+              <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+            </ul>
+          </div>
+          <div class="rights">
+            <p><i class="fa-solid fa-copyright"></i> Copyrights reserved.</p>
+          </div>
+        </div>
+        
+    </footer>
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

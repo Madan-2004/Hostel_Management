@@ -1,0 +1,293 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <title>Book Room</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <!-- <style>
+        *{
+            margin: 0;
+            padding: 0;
+                }
+        body{
+            background-position: center;
+            background-size: auto;
+            }
+        #form{
+            background-color: black;
+            height:700px;
+            width:550px;
+            margin: auto;
+            margin-top: 100px;
+            opacity:0.7;
+            display: flex; /* Enable flexbox layout */
+            justify-content: center; /* Center elements horizontally */
+            align-items: center; 
+        }
+        #group{
+            border:none;
+            width:400px;
+            margin-top: 18px;
+            position: absolute;
+        }
+        #content{
+            border: 1px solid #fff;
+            margin:10px;
+            margin-left: 8px;
+            padding:5px;
+        }
+        #content #input-group{
+            border:none;
+            outline:none;
+            background: transparent;
+            margin-left:8px;
+            width:300px;
+            color:#fff;
+        }
+        ::placeholder{
+            color:#fff;
+        }
+        .fa{
+            display:inline-block;
+            color: rgb(34, 122, 191);
+            border-right:1px solid #fff;
+            padding:8px;
+            margin-left: 8px;
+        }
+        #second-group{
+            border:none;
+            width:400px;
+            margin-top: 55px;
+            margin-left:400px;
+        }
+        #submit-btn{
+            margin-top: 30px;
+            margin-left: 100px;
+            background: transparent;
+            color:#fff;
+            width:100px;
+            border:1px solid rgb(34, 122, 191);
+            outline:none;
+            padding:5px;
+            font-size: 15px;
+        }
+    </style> -->
+         
+    <style>
+        /* General Styles */
+  /* Container Styles */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Form Styles */
+  .form-group {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  #form h1 {
+    color: #6c63ff;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  #group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  #content {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  #content i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #6c63ff;
+  }
+  
+  #input-group {
+    width: 100%;
+    padding: 15px 40px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    background-color: #f8f8f8;
+    color: #7e7e7e;
+  }
+  
+  #input-group:focus {
+    outline: none;
+    border-color: #6c63ff;
+    box-shadow: 0 0 10px rgba(108, 99, 255, 0.3);
+  }
+  
+  #submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(to right, #6c63ff, #a99bf9);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  #submit-btn:hover {
+    background: linear-gradient(to right, #5a51ff, #9689f7);
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    #group {
+      grid-template-columns: 1fr;
+    }
+  }
+    </style>
+</head>
+<body>
+    <div class="nav1">
+        <div>
+          <h3>IIT Indore</h3>
+        </div>
+    
+        <div class="headings">
+          <a href="/">Home</a>
+          <a href="/stays" class="active">Stays</a>
+          <a href="/bookings">Your Bookings</a>
+        </div>
+          
+          <div class="nav1-login">
+            <!-- <a href="/login">Sign up</a> -->
+            <a href="/login">Login</a>
+          </div>
+      </div>
+    
+      <!-- Responsive navbar -->
+      <div class="navbar2">
+          <div class="ham">
+            <p><i class="fa-solid fa-bars"></i></p>
+          </div>
+          <!-- <div class="title">
+            <a href="/" class="lo">
+              <img src="" class="logo">
+              <h3>IIT Indore</h3>
+            </a>
+        </div> -->
+      </div>
+      <div class="side-bar">
+          <div id="close"><i class="fa-solid fa-xmark"></i></div>
+          <ul>
+              <li><a href="/" class="active">Home</a></li>
+              <li><a href="/stays">Stays</a></li>
+              <li><a href="/bookings">Your Bookings</a></li>
+              <li><a href="/login">Login</a></li>
+          </ul>
+      </div>
+
+      <div class="container">
+        <form class="form-group" action="/" method="POST">
+            <div id="form">
+                <h1>Booking Form</h1>
+                <div id="group">
+                    <div id="content">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <input type="text" id="input-group" placeholder="Name" required>
+                    </div>
+                    <div id="content">
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        <input type="email" id="input-group" placeholder="Email-Id" required>
+                    </div>
+                    <div id="content">
+                        <i class="fa fa-phone" aria-hidden="true"></i>
+                        <input type="text" id="input-group" placeholder="Phone number" required>
+                    </div>
+                    <div id="content">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <input type="date" id="input-group" value="{{check_in}}" disabled>
+                    </div>
+                    <div id="content">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                        <input type="date" id="input-group" value="{{check_out}}" disabled>
+                    </div>
+
+                    <div id="content">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <input type="number" id="input-group" placeholder="{{capacity}}" disabled>
+                    </div>
+                        <div id="content">
+                            <i class="fa fa-users" aria-hidden="true"></i>
+                            <select id="input-group" value="{{category}}" disabled>
+                                <option value="1">Type-1</option>
+                                <option value="2">Type-2</option>
+            
+                            </select>
+                        </div>
+                        <!-- <button type="submit" value="Submit" id="submit-btn">Pay And Book Now</button> -->
+                        <button type="submit" value="Submit" id="submit-btn">Book Now</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- <div class="container">
+        <h1>Book Now</h1>
+        <form action="/" method="POST">
+          <input type="text" placeholder="Your Name" class="input-field">
+          <input type="email" placeholder="Your Email" class="input-field">
+          <select class="input-field">
+            <option value="" disabled selected>Select Dr</option>
+            <option value="dr1">Dr. John Doe</option>
+            <option value="dr2">Dr. Jane Smith</option>
+          </select>
+          <select class="input-field">
+            <option value="" disabled selected>Select Date</option>
+            <option value="date1">June 1, 2023</option>
+            <option value="date2">June 2, 2023</option>
+          </select>
+          
+          <button type="submit" class="btn">Book Now</button>
+        </form>
+      </div> -->
+
+
+    <footer>
+        <div class="footer">
+          <div class="info">
+            <h4>IIT Indore</h4>
+          </div>
+          <div class="social">
+            <ul>
+              <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+            </ul>
+          </div>
+          <div class="rights">
+            <p><i class="fa-solid fa-copyright"></i> Copyrights reserved.</p>
+          </div>
+        </div>
+        
+    </footer>
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

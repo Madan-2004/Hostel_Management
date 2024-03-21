@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <title>Home</title>
+    <style>
+  
+      .body{
+        height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 50%;
+        margin: 0px auto;
+      }
+
+      .body .d1{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .body .d1 img{
+        height: 30vh;
+        animation: img 0.5s linear forwards;
+      }
+
+      @keyframes img{
+        0%{
+          opacity: 0;
+          transform: translateY(100px);
+        }
+        50%{
+          opacity: 0.5;
+          transform: translateY(50px);
+        }
+        100%{
+          opacity: 1;
+          transform: translateY(0px);
+        }
+      }
+  
+      .body .d1 h2{
+        color: var(--secondary-color);
+        margin-bottom: 30px;
+        animation: h2 0.5s linear forwards;
+        font-size: 30px;
+        text-align: center;
+      }
+  
+      @keyframes h2{
+        0%{
+          opacity: 0;
+          transform: translateY(100px);
+        }
+        50%{
+          opacity: 0.5;
+          transform: translateY(50px);
+        }
+        100%{
+          opacity: 1;
+          transform: translateY(0px);
+        }
+      }
+
+      @media (max-width: 675px){
+        .body .d1 img{
+          height: 20vh;
+        }
+      }
+  
+      .body button{
+          height: 50px;
+          font-size: 20px;
+          padding: 10px;
+          margin: 30px 0px;
+          width: 150px;
+          cursor: pointer;
+          border: 0;
+          outline: none;
+          border-radius: 30px;
+          background-color: #fff;
+          color: var(--secondary-color);
+          font-weight: 400;
+          transition: 0.3s ease-in-out;
+          position: relative;
+          box-shadow: 6px 6px 1px -1px rgba(0, 0, 0, 0.15),
+                      -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+          animation: loginbtn 0.5s linear forwards;
+      }
+
+      @keyframes loginbtn{
+        0%{
+          opacity: 0;
+          transform: translateY(100px);
+        }
+        50%{
+          opacity: 0.5;
+          transform: translateY(50px);
+        }
+        100%{
+          opacity: 1;
+          transform: translateY(0px);
+        }
+      }
+  
+      .body button:hover{
+          color: #fff;
+          box-shadow: 6px 6px 1px -1px rgba(72,68,163,0.2),
+                      -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+          z-index: 2;
+      }
+  
+      .body button:hover::before{
+          content: '';
+          height: 100%;
+          position: absolute;
+          width: 100%;
+          left: 0px;
+          top: 0px;
+          background-color: var(--secondary-color);
+          color: #fff;
+          animation: btn 0.3s linear forwards;
+          border-radius: 30px;
+          opacity: 1;
+          z-index: -2;
+      }
+  
+      @keyframes btn{
+          0%{
+              width: 0%;
+          }
+          50%{
+              width: 50%;
+          }
+          100%{
+              width: 100%;
+          }
+      }
+
+      .fa-solid.fa-user{
+        margin-right: 5px;
+      }
+
+  
+      @media (max-width: 750px){
+        body{
+          height: 100%;
+        }
+  
+        .body{
+          flex-direction: column;
+          width: 100vw;
+          padding: 30px;
+          text-align: center; 
+        }
+      }
+  
+    </style>
+</head> 
+<body>
+    <div class="nav1">
+      <div>
+        <h3>IIT Indore</h3>
+      </div>
+
+      <div class="headings">
+        <a href="/" class="active">Home</a>
+        <a href="/stays">Stays</a>
+        <a href="/bookings">Your Bookings</a>
+      </div>
+        
+        <div class="nav1-login">
+          <!-- <a href="/login">Sign up</a> -->
+          <a href="/login">Login</a>
+        </div>
+    </div>
+
+    <!-- Responsive navbar -->
+    <div class="navbar2">
+        <div class="ham">
+          <p><i class="fa-solid fa-bars"></i></p>
+        </div>
+        <!-- <div class="title">
+          <a href="/" class="lo">
+            <img src="{% static 'IITI_Logo.png' %}" class="logo">
+            <h3>IIT Indore</h3>
+          </a>
+      </div> -->
+    </div>
+    <div class="side-bar">
+        <div id="close"><i class="fa-solid fa-xmark"></i></div>
+        <ul>
+            <li><a href="/" class="active">Home</a></li>
+            <li><a href="/stays">Stays</a></li>
+            <li><a href="/bookings">Your Bookings</a></li>
+            <li><a href="/login">Login</a></li>
+        </ul>
+    </div>
+
+    <div class="body">
+      <div class="d1">
+        <img src="{% static 'IITI_Logo.png' %}">
+        <h2>IIT Indore Hostels - Guest House Bookings</h2>
+      </div>
+      <div classs="d2">
+        <a href='{% url "login" %}'><button> <i class="fa-solid fa-user"></i> Login</button></a>
+      </div>
+    </div>
+
+    <footer>
+        <div class="footer">
+          <div class="info">
+            <h4>IIT Indore</h4>
+          </div>
+          <div class="social">
+            <ul>
+              <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+            </ul>
+          </div>
+          <div class="rights">
+            <p><i class="fa-solid fa-copyright"></i> Copyrights reserved.</p>
+          </div>
+        </div>
+        
+    </footer>
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>
