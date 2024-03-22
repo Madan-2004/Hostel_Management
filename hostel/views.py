@@ -104,6 +104,36 @@ def signup(request):
 
 def book_room(request):
     stays_data = request.session.get('stays_data')
+    user_name = None
+    if request.user.is_authenticated:
+        user_name = request.user.username
+
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        phoneno = request.POST['phoneno']
+        check_in = stays_data['check_in']
+        check_out = stays_data['check_out']
+        capacity = stays_data['capacity']
+        category = stays_data['category']
+        available_room_nos = stays_data['available_room_nos']
+        user = User.objects.get(username=username)
+        i = 0
+        for r in available_room_nos and i < capacity:
+            new_booking = Booking.objects.create(
+                user = user_name,
+                phone_number = phoneno,
+                email = email,
+                room = r,
+                check_in = check_in,
+                check_out = check_out
+            )
+
+            new_booking.save()
+            i = i+1
+
+        return redirect('/')
+
     if not stays_data:
         # Handle case where session data is not available
         return HttpResponse("Session data not found.")

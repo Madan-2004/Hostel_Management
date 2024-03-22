@@ -83,7 +83,7 @@
         /* General Styles */
   /* Container Styles */
   .container {
-    max-width: 800px;
+    max-width: 60%;
     margin: 0 auto;
     padding: 20px;
   }
@@ -97,7 +97,7 @@
   }
   
   #form h1 {
-    color: #6c63ff;
+    color: var(--secondary-color);
     margin-bottom: 30px;
     text-align: center;
   }
@@ -108,43 +108,44 @@
     gap: 20px;
   }
   
-  #content {
+  .content {
     position: relative;
     margin-bottom: 20px;
   }
   
-  #content i {
+  .content i {
     position: absolute;
     top: 50%;
     left: 15px;
     transform: translateY(-50%);
-    color: #6c63ff;
+    color: var(--secondary-color);
   }
   
   #input-group {
     width: 100%;
     padding: 15px 40px;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(108, 99, 255, 0.1);
     border-radius: 25px;
     font-size: 16px;
-    background-color: #f8f8f8;
+    background-color: rgba(99, 130, 255, 0.1);
     color: #7e7e7e;
+    cursor: pointer;
   }
   
   #input-group:focus {
     outline: none;
-    border-color: #6c63ff;
-    box-shadow: 0 0 10px rgba(108, 99, 255, 0.3);
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 10px rgba(103, 156, 231, 0.3);
   }
   
-  #submit-btn {
+  /*#submit-btn {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(to right, #6c63ff, #a99bf9);
+    background: linear-gradient(to right, var(--secondary-color), rgb(117, 97, 231));
     color: #fff;
     border: none;
     border-radius: 25px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
     transition: background 0.3s ease;
@@ -152,12 +153,115 @@
   
   #submit-btn:hover {
     background: linear-gradient(to right, #5a51ff, #9689f7);
+  }*/
+
+  .btn {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 16px;
+    text-decoration: none;
+    width: 80px;
+    height: 60px;
+    background: var(--secondary-color);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 0;
+    border-radius: 75px;
+    cursor: pointer;
+    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+  }
+  .btn span {
+    color: transparent;
+    transition: all 100ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+  }
+  .btn:before {
+    content:'';
+    position: absolute;
+    width: 3px;
+    height: 15px;
+    background: white;
+    transform: rotate(45deg);
+    top: 27px;
+    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+  }
+  .btn:after {
+    content:'';
+    position: absolute;
+    width: 3px;
+    height: 15px;
+    background: white;
+    transform: rotate(-45deg);
+    bottom: 27px;
+    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+  }
+  
+  /*--Button Hover Styles--*/
+  .btn:hover {
+    width: 225px;
+    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+  }
+  .btn:hover span {
+    color: white;
+    margin-left: -20px;
+    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+  }
+  .btn:hover:before, .btn:hover:after {
+    right: 45px;
+    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+  }
+  
+  /*--Button Active Styles--*/
+  .btn:active, .btn:focus  {
+    width: 100px;
+    background: green;
+    outline: none;
+    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+  }
+  
+  .btn:active span, .btn:focus span {
+    color: transparent;
+  }
+  
+  .btn:active:before, .btn:focus:before {
+    transform: rotate(45deg);
+    top: 28px;
+    height: 25px;
+    margin: auto;
+    right: -10px;
+    left: 0;
+  }
+  
+  .btn:active:after, .btn:focus:after {
+    height: 14px;
+    transform: rotate(-45deg);
+    margin: auto;
+    right: 0;
+    left: -17px;
   }
   
   /* Media Queries */
   @media (max-width: 768px) {
+    .container{
+      max-width: 90%;
+    }
     #group {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 900px){
+    .container{
+      max-width: 70%;
     }
   }
     </style>
@@ -203,70 +307,50 @@
       </div>
 
       <div class="container">
-        <form class="form-group" action="/" method="POST">
+        <form class="form-group" action="/book_room/" method="POST">
+          {% csrf_token %}
             <div id="form">
                 <h1>Booking Form</h1>
                 <div id="group">
-                    <div id="content">
+                    <div class="content">
                         <i class="fa fa-user" aria-hidden="true"></i>
-                        <input type="text" id="input-group" placeholder="Name" required>
+                        <input type="text" id="input-group" placeholder="Name" name="username" required>
                     </div>
-                    <div id="content">
+                    <div class="content">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        <input type="email" id="input-group" placeholder="Email-Id" required>
+                        <input type="email" id="input-group" placeholder="Email-Id" name="email" required>
                     </div>
-                    <div id="content">
+                    <div class="content">
                         <i class="fa fa-phone" aria-hidden="true"></i>
-                        <input type="text" id="input-group" placeholder="Phone number" required>
+                        <input type="text" id="input-group" placeholder="Phone number" name="phoneno" required>
                     </div>
-                    <div id="content">
-                        <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <input type="date" id="input-group" value="{{check_in}}" disabled>
+                    <div class="content">
+                      <i class="fa-solid fa-right-to-bracket"></i>
+                            <input type="date" id="input-group" value="{{check_in}}" name="checkin" disabled>
                     </div>
-                    <div id="content">
-                        <i class="fa fa-calendar" aria-hidden="true"></i>
-                        <input type="date" id="input-group" value="{{check_out}}" disabled>
+                    <div class="content">
+                      <i class="fa-solid fa-right-from-bracket"></i>
+                        <input type="date" id="input-group" value="{{check_out}}" name="checkout" disabled>
                     </div>
 
-                    <div id="content">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                        <input type="number" id="input-group" placeholder="{{capacity}}" disabled>
+                    <div class="content">
+                      <i class="fa-solid fa-bed"></i>
+                        <input type="number" id="input-group" placeholder="{{capacity}}" name="cap" disabled>
                     </div>
-                        <div id="content">
-                            <i class="fa fa-users" aria-hidden="true"></i>
-                            <select id="input-group" value="{{category}}" disabled>
+                        <div class="content">
+                          <i class="fa-solid fa-hotel"></i>
+                            <select id="input-group" value="{{category}}" name="cat" disabled>
                                 <option value="1">Type-1</option>
                                 <option value="2">Type-2</option>
             
                             </select>
                         </div>
                         <!-- <button type="submit" value="Submit" id="submit-btn">Pay And Book Now</button> -->
-                        <button type="submit" value="Submit" id="submit-btn">Book Now</button>
+                        <button type="submit" value="Submit" class="btn" id="submit-btn"><span>Book Now</span></button>
                 </div>
             </div>
         </form>
     </div>
-
-    <!-- <div class="container">
-        <h1>Book Now</h1>
-        <form action="/" method="POST">
-          <input type="text" placeholder="Your Name" class="input-field">
-          <input type="email" placeholder="Your Email" class="input-field">
-          <select class="input-field">
-            <option value="" disabled selected>Select Dr</option>
-            <option value="dr1">Dr. John Doe</option>
-            <option value="dr2">Dr. Jane Smith</option>
-          </select>
-          <select class="input-field">
-            <option value="" disabled selected>Select Date</option>
-            <option value="date1">June 1, 2023</option>
-            <option value="date2">June 2, 2023</option>
-          </select>
-          
-          <button type="submit" class="btn">Book Now</button>
-        </form>
-      </div> -->
-
 
     <footer>
         <div class="footer">
