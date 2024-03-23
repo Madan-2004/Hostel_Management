@@ -23,6 +23,7 @@ class Room(models.Model):
         return f'Room number - {self.room_no}.'
     
 class Booking(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
     phone_number = models.CharField(max_length=15, default=9876543210)
     email = models.EmailField(default='all@iiti.ac.in')

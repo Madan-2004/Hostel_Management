@@ -279,8 +279,11 @@
         </div>
           
           <div class="nav1-login">
-            <!-- <a href="/login">Sign up</a> -->
-            <a href="/login">Login</a>
+              {% if user.is_authenticated %}
+                <a href='{% url "logout" %}'>Logout</a>
+                {% else %}
+                <a href='{% url "login" %}'>Login</a>
+                {% endif %}
           </div>
       </div>
     
@@ -302,7 +305,13 @@
               <li><a href="/" class="active">Home</a></li>
               <li><a href="/stays">Stays</a></li>
               <li><a href="/bookings">Your Bookings</a></li>
-              <li><a href="/login">Login</a></li>
+              <li><div class="nav1-login">
+                {% if user.is_authenticated %}
+                <a href='{% url "logout" %}'>Logout</a>
+                {% else %}
+                <a href='{% url "login" %}'>Login</a>
+                {% endif %}
+              </div></li>
           </ul>
       </div>
 
@@ -314,7 +323,7 @@
                 <div id="group">
                     <div class="content">
                         <i class="fa fa-user" aria-hidden="true"></i>
-                        <input type="text" id="input-group" placeholder="Name" name="username" required>
+                        <input type="text" id="input-group" placeholder="{{user.username}}" name="username" disabled>
                     </div>
                     <div class="content">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>

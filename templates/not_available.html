@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <title>Not Available</title>
+    <style>
+      .not{
+        min-height: 75vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .icon img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        padding: 10px;
+    }
+    
+    h1 {
+        color: var(--secondary-color);
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    
+    p {
+        color: black;
+        margin-bottom: 20px;
+    }
+    
+    a.go-back {
+        background-color: var(--secondary-color);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+    }
+    
+    a.go-back:hover {
+        background-color: rgba(34,122,191,0.7);
+    }
+    </style>
+    
+</head>
+<body>
+    <div class="nav1">
+        <div>
+          <h3>IIT Indore</h3>
+        </div>
+  
+        <div class="headings">
+          <a href="/">Home</a>
+          <a href="/stays">Stays</a>
+          <a href="/bookings" class="active">Bookings</a>
+        </div>
+          
+          <div class="nav1-login">
+            {% if user.is_authenticated %}
+            <a href='{% url "logout" %}'>Logout</a>
+            {% else %}
+            <a href='{% url "login" %}'>Login</a>
+            {% endif %}
+          </div>
+      </div>
+  
+      <!-- Responsive navbar -->
+      <div class="navbar2">
+          <div class="ham">
+            <p><i class="fa-solid fa-bars"></i></p>
+          </div>
+          <div class="title">
+            <a href="/" class="lo">
+              <img src="" class="logo">
+              <h3>IIT Indore</h3>
+            </a>
+        </div>
+      </div>
+      <div class="side-bar">
+          <div id="close"><i class="fa-solid fa-xmark"></i></div>
+          <ul>
+              <li><a href="/" class="active">Home</a></li>
+              <li><a href="/stays">Stays</a></li>
+              <li><a href="/bookings">Your Bookings</a></li>
+              <li><div class="nav1-login">
+                {% if user.is_authenticated %}
+                <a href='{% url "logout" %}'>Logout</a>
+                {% else %}
+                <a href='{% url "login" %}'>Login</a>
+                {% endif %}
+              </div></li>
+          </ul>
+      </div>
+
+      <div class="not">
+        <div class="icon">
+          <img src="{% static 'no-room.png' %}" alt="Not Available Icon">
+        </div>
+        <h1>Oops!</h1>
+        <p>Sorry! There are {{rem}} rooms not available.</p>
+        <a class="go-back" href="{% url 'stays' %}">Go Back!</a>
+      </div>
+
+     
+
+    <footer>
+        <div class="footer">
+          <div class="info">
+            <h4>IIT Indore</h4>
+          </div>
+          <div class="social">
+            <ul>
+              <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+            </ul>
+          </div>
+          <div class="rights">
+            <p><i class="fa-solid fa-copyright"></i> Copyrights reserved.</p>
+          </div>
+        </div>
+        
+    </footer>
+
+    <script src="{% static 'script.js' %}"></script>
+    <script>
+      var login = document.querySelector('form#login');
+      var register = document.querySelector('form#register');
+      var clog = document.querySelector('a#clicklog');
+      var creg = document.querySelector('a#clickreg');
+      creg.addEventListener("click", ()=>{
+        login.style.display = 'none';
+        register.style.display = 'flex';
+      });
+       
+      clog.addEventListener("click", ()=>{
+        login.style.display = 'flex';
+        register.style.display = 'none';
+      });
+
+        var password = document.querySelector(".password input#pass");
+        var newpass = document.querySelector(".password input#newpass");
+        var retypepass = document.querySelector(".password input#retypepass");
+        var span = document.querySelector(".password span");
+        var news = document.querySelector(".password span.new");
+        var retype = document.querySelector(".password span.retype");
+        function toggleShow(){
+            if(password.type === "password") {
+                password.setAttribute('type', 'text');
+                span.innerHTML = "<i class='fa-solid fa-lock-open'></i>";
+                span.style.color = "#fff";
+            }
+            else{
+                password.setAttribute('type','password') ;
+                span.innerHTML = "<i class='fa-solid fa-lock'></i>";
+                span.style.color = "var(--secondary-color)";
+            }
+        }
+        function toggleShow1(){
+          if(newpass.type === "password") {
+              newpass.setAttribute('type', 'text');
+              news.innerHTML = "<i class='fa-solid fa-lock-open'></i>";
+              news.style.color = "#fff";
+          }
+          else{
+              newpass.setAttribute('type','password') ;
+              news.innerHTML = "<i class='fa-solid fa-lock'></i>";
+              news.style.color = "var(--secondary-color)";
+          }
+      }
+      function toggleShow2(){
+        if(retypepass.type === "password") {
+            retypepass.setAttribute('type', 'text');
+            retype.innerHTML = "<i class='fa-solid fa-lock-open'></i>";
+            retype.style.color = "#fff";
+        }
+        else{
+            retypepass.setAttribute('type','password') ;
+            retype.innerHTML = "<i class='fa-solid fa-lock'></i>";
+            retype.style.color = "var(--secondary-color)";
+        }
+    }
+    </script>
+</body>
+</html>
