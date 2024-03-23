@@ -279,25 +279,28 @@
         </div>
       </div> -->
 
-      {% for booking in grouped_bookings %}
+      {% for reservation in user_reservations %}
       <div class="container">
         <div class="card">
           <div class="box">
             <div class="content">
-              <h2>01</h2>
+              <h2>{{ forloop.counter }}</h2>
               <h3>Booking Info</h3>
               <div class="columns">
                 <div class="left">
-                  <p><span>Number of Rooms:</span>{{ booking.num_rooms }}</p>
-                  <p><span>Check-In:</span>{{ booking.check_in }}</p>
-                  <p><span>Check-Out:</span>{{ booking.check_out }}</p>
-                  <p><span>Room no:</span>{{ booking.room_nos }}</p>
+                  <p><span>Number of Rooms:</span>{{ reservation.number_of_rooms }}</p>
+                  <p><span>Check-In:</span>{{ reservation.check_in_date }}</p>
+                  <p><span>Check-Out:</span>{{ reservation.check_out_date }}</p>
+                  <p><span>Room no:</span>{{ reservation.room_numbers_list|join:", " }}</p>
+                  <p><span>Room type:</span>{{ reservation.get_room_type_display }}</p>
+                  <p><span>Price:</span>Rs. {{ reservation.price }}</p>
+                  <p><span>Payment status:</span>{{ reservation.get_payment_status_display }}</p>
                 </div>
                 <div class="right">
                   <h5>Contact Details</h5>
                   <p><span>Name:</span>{{ user.username }}</p>
-                  <p><span>Email:</span>{{ booking.email }}</p>
-                  <p><span>Phone No:</span>{{ booking.phone_number }}</p>
+                  <p><span>Email:</span>{{ reservation.email }}</p>
+                  <p><span>Phone No:</span>{{ reservation.phone_number }}</p>
                 </div>
               </div>
               <div class="btn-row">

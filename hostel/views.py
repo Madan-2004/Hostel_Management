@@ -1,6 +1,6 @@
 from django.shortcuts import render ,redirect
 from django.http import HttpResponse , HttpResponseRedirect
-from .models import Room, Booking
+from .models import Room, Booking, Reservation
 from django.db.models import Count, Value
 from django.db import models
 # from .models import Hotels,Rooms,Reservation
@@ -84,16 +84,9 @@ def not_available(request, rem):
 
 @login_required(login_url='/login/')
 def bookings(request):
-    user_bookings = Booking.objects.filter(user = request.user)
+    user_reservations = Reservation.objects.filter(user=request.user)
 
-    grouped_bookings = user_bookings.values('check_in', 'check_out').annotate(
-        num_rooms=Count('id'),
-        room_nos=Concat('room__room_no', Value(', '), output_field=models.CharField()),
-        email=Concat('email', Value(', '), output_field=models.EmailField()),
-        phone_number=Concat('phone_number', Value(', '), output_field=models.CharField())
-    )
-
-    return render(request, "bookings.html", {'grouped_bookings': grouped_bookings})
+    return render(request, "bookings.html", {'user_reservations': user_reservations})
 
 def signup(request):
     if request.method == "POST":
@@ -136,9 +129,11 @@ def book_room(request):
         capacity = stays_data['capacity']
         category = stays_data['category']
         available_room_nos = stays_data['available_room_nos']
+        amount=0
         user = User.objects.get(username=user_name.username)
         for r in available_room_nos:
             room_info = Room.objects.get(room_no = r)
+            amount=amount+int(room_info.rent)
             new_booking = Booking.objects.create(
                 user = user_name,
                 phone_number = phoneno,
@@ -149,6 +144,20 @@ def book_room(request):
             )
 
             new_booking.save()
+
+        reservation = Reservation.objects.create(
+            user=user_name,
+            email=email,
+            phone_number=phoneno,
+            number_of_rooms=len(available_room_nos),
+            check_in_date=check_in,
+            check_out_date=check_out,
+            room_numbers_list=available_room_nos,
+            price=amount,
+            room_type=category
+        )
+
+        reservation.save()
 
         return redirect('bookings')
 
