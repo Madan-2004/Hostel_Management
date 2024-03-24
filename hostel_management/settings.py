@@ -51,7 +51,9 @@ INSTALLED_APPS = [
     'mathfilters',
     'crispy_forms',
     'ckeditor_uploader',
-
+    'checkout.apps.CheckoutConfig',
+    'paywix',
+    # 'checkout',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -252,4 +254,22 @@ JAZZMIN_UI_TWEAKS = {
         "danger": "btn-danger",
         "success": "btn-success"
     }
+}
+
+PAYU_CONFIG = {
+        "merchant_key": "3o6jgxhp",
+        "merchant_salt": "67bAgZX1B3",
+        "mode": "test",
+  }
+
+
+# PAYU Mandatory Config details
+# No specific schema, you can use any other methods
+
+PAYU_CONFIG = {
+    "merchant_key": "",
+    "merchant_salt": "",
+    "mode": "test",
+    "success_url": "http://127.0.0.1:8000/success",
+    "failure_url": "http://127.0.0.1:8000/failure"
 }
