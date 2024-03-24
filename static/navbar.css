@@ -172,6 +172,16 @@
     }
 }
 
+footer {
+    /* position: fixed; */
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--secondary-color);
+    color: #fff;
+    text-align: center;
+}
+
 footer .footer{
     display: flex;
     justify-content: space-between;
@@ -325,8 +335,8 @@ footer .footer{
         position:fixed;
         padding: 20px;
         top: 0;
-        background-color: rgba(29,161,242,0.6);
-        width: 100%;
+        background-color: rgba(29,161,242,0.8);
+        width: 50%;
         text-align: center;
         height: 100%;
         z-index: 30;
@@ -373,6 +383,11 @@ footer .footer{
         100%{
             width: 80%;
         }
+    }
+
+    .side-bar li .nav1-login a{
+        border: 1.5px solid #fff;
+        padding: 10px;
     }
     
     .show-side{

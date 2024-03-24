@@ -83,8 +83,8 @@
         /* General Styles */
   /* Container Styles */
   .container {
-    max-width: 60%;
-    margin: 0 auto;
+    width: 60%;
+    margin: 20px auto;
     padding: 20px;
   }
   
@@ -100,6 +100,7 @@
     color: var(--secondary-color);
     margin-bottom: 30px;
     text-align: center;
+    font-size: 25px;
   }
   
   #group {
@@ -121,7 +122,7 @@
     color: var(--secondary-color);
   }
   
-  #input-group {
+  .input-group {
     width: 100%;
     padding: 15px 40px;
     border: 1px solid rgba(108, 99, 255, 0.1);
@@ -132,7 +133,7 @@
     cursor: pointer;
   }
   
-  #input-group:focus {
+  .input-group:focus {
     outline: none;
     border-color: var(--secondary-color);
     box-shadow: 0 0 10px rgba(103, 156, 231, 0.3);
@@ -250,18 +251,43 @@
   }
   
   /* Media Queries */
-  @media (max-width: 768px) {
+  @media (max-width: 900px){
     .container{
-      max-width: 90%;
-    }
-    #group {
-      grid-template-columns: 1fr;
+      width: 80%;
     }
   }
 
-  @media (max-width: 900px){
+  @media (max-width: 768px) {
     .container{
-      max-width: 70%;
+      width: 95%;
+    }
+  }
+
+  @media (max-width: 600px){
+    .container{
+      width: 70%;
+    }
+    #group{
+      grid-template-columns: 1fr;
+      gap: 5px;
+    }
+  }
+
+  @media (max-width: 465px){
+    .container{
+      width: 80%;
+    }
+  }
+
+  @media (max-width: 365px){
+    .container{
+      width: 95%;
+    }
+  }
+
+  @media (max-width: 300px){
+    .container{
+      width: 100%;
     }
   }
     </style>
@@ -323,32 +349,32 @@
                 <div id="group">
                     <div class="content">
                         <i class="fa fa-user" aria-hidden="true"></i>
-                        <input type="text" id="input-group" placeholder="{{user.username}}" name="username" disabled>
+                        <input type="text" class="input-group" placeholder="{{user.username}}" name="username" disabled>
                     </div>
                     <div class="content">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        <input type="email" id="input-group" placeholder="Email-Id" name="email" required>
+                        <input type="email" class="input-group" placeholder="Email-Id" name="email" required>
                     </div>
                     <div class="content">
                         <i class="fa fa-phone" aria-hidden="true"></i>
-                        <input type="text" id="input-group" placeholder="Phone number" name="phoneno" required>
+                        <input type="text" class="input-group" placeholder="Phone number" name="phoneno" required>
                     </div>
                     <div class="content">
                       <i class="fa-solid fa-right-to-bracket"></i>
-                            <input type="date" id="input-group" value="{{check_in}}" name="checkin" disabled>
+                            <input type="date" class="input-group" value="{{check_in}}" name="checkin" disabled>
                     </div>
                     <div class="content">
                       <i class="fa-solid fa-right-from-bracket"></i>
-                        <input type="date" id="input-group" value="{{check_out}}" name="checkout" disabled>
+                        <input type="date" class="input-group" value="{{check_out}}" name="checkout" disabled>
                     </div>
 
                     <div class="content">
                       <i class="fa-solid fa-bed"></i>
-                        <input type="number" id="input-group" placeholder="{{capacity}}" name="cap" disabled>
+                        <input type="number" class="input-group" placeholder="{{capacity}}" name="cap" disabled>
                     </div>
                         <div class="content">
                           <i class="fa-solid fa-hotel"></i>
-                            <select id="input-group" value="{{category}}" name="cat" disabled>
+                            <select class="input-group" value="{{category}}" name="cat" style="color:#000;" disabled>
                                 <option value="1">Type-1</option>
                                 <option value="2">Type-2</option>
             

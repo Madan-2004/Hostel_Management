@@ -196,14 +196,109 @@
 
       .columns p{
         text-align: left;
-        color: #000;
       }
 
       .columns p span{
         margin-right: 10px;
-        color: #fff;
+        color: #000;
       }
 
+      @media (max-width: 1020px){
+        body .container .card{
+          width: 60%;
+        }
+      }
+
+      @media (max-width: 870px){
+        body .container .card{
+          width: 70%;
+        }
+      }
+
+      @media (max-width: 720px){
+        body .container .card{
+          width: 80%;
+        }
+      }
+
+      @media (max-width: 630px){
+        body .container .card{
+          width: 90%;
+          min-height: 400px;
+        }
+      }
+
+      @media (max-width: 580px){
+        .columns{
+          display: block;
+          margin: auto;
+        }
+      }
+
+      @media (max-width: 440px){
+        body .container .card{
+          min-height: 500px;
+        }
+      }
+
+      @media (max-width: 330px){
+        body .container .card{
+          min-height: 550px;
+          width: 100%;
+        }
+      }
+
+      .empty{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+        min-height: 70vh;
+        padding: 20px;
+        width: 80%;
+        margin: 0 auto;
+      }
+
+      .empty img{
+        height: 300px;
+        width: 300px;
+      }
+
+      .empty h5{
+        font-size: 20px;
+        color: var(--secondary-color);
+      }
+
+      .empty p{
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+
+      .empty a{
+        text-decoration: none;
+        background-image: linear-gradient(-90deg,var(--secondary-color), rgb(31, 151, 243));
+        color: #fff;
+        height: 50px;
+        font-size: 18px;
+        padding: 10px;
+        width: 150px;
+        border: none;
+        outline: none;
+        border-radius: 20px;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        cursor: pointer;
+      }
+
+      .empty a:hover{
+        background-color: #fff;
+        background-image: none;
+        color: var(--secondary-color);
+        border: 1.5px solid var(--secondary-color);
+      }
+
+      
     </style>
   </head>
 <body>
@@ -255,64 +350,55 @@
           </ul>
       </div>
 
-      <!-- <div class="booking-card">
-        <div class="booking-header">
-          <h2>Blue Sky Hotel</h2>
-          <p>Mandalika</p>
-        </div>
-        <div class="booking-details">
-          <p>Economic Single Room</p>
-          <p>Check-in: 12 June 2021</p>
-          <p>Check-out: 14 June 2021</p>
-          <p>Guests: 2</p>
-          <p>Rooms: 1</p>
-        </div>
-        <div class="contact-details">
-          <p>Mr. Thomas Miller</p>
-          <p>thomasmiller@mail.com</p>
-          <p>+6281909201</p>
-        </div>
-        <div class="booking-actions">
-          <button class="btn btn-danger">Delete Booking</button>
-          <button class="btn btn-primary">Pay Now</button>
-          <button class="btn btn-secondary">Pay Later</button>
-        </div>
-      </div> -->
-
-      {% for reservation in user_reservations %}
-      <div class="container">
-        <div class="card">
-          <div class="box">
-            <div class="content">
-              <h2>{{ forloop.counter }}</h2>
-              <h3>Booking Info</h3>
-              <div class="columns">
-                <div class="left">
-                  <p><span>Number of Rooms:</span>{{ reservation.number_of_rooms }}</p>
-                  <p><span>Check-In:</span>{{ reservation.check_in_date }}</p>
-                  <p><span>Check-Out:</span>{{ reservation.check_out_date }}</p>
-                  <p><span>Room no:</span>{{ reservation.room_numbers_list|join:", " }}</p>
-                  <p><span>Room type:</span>{{ reservation.get_room_type_display }}</p>
-                  <p><span>Price:</span>Rs. {{ reservation.price }}</p>
-                  <p><span>Payment status:</span>{{ reservation.get_payment_status_display }}</p>
+      {% if user_reservations%}
+        {% for reservation in user_reservations %}
+        <div class="container">
+          <div class="card">
+            <div class="box">
+              <div class="content">
+                <h2>{{ forloop.counter }}</h2>
+                <h3>Booking Info</h3>
+                <div class="columns">
+                  <div class="left">
+                    <p><span>Number of Rooms:</span>{{ reservation.number_of_rooms }}</p>
+                    <p><span>Check-In:</span>{{ reservation.check_in_date }}</p>
+                    <p><span>Check-Out:</span>{{ reservation.check_out_date }}</p>
+                    <p><span>Room no:</span>{{ reservation.room_numbers_list|join:", " }}</p>
+                    <p><span>Room type:</span>{{ reservation.get_room_type_display }}</p>
+                  </div>
+                  <div class="right">
+                    <!-- <h5>Contact Details</h5>
+                    <p><span>Name:</span>{{ user.username }}</p>
+                    <p><span>Email:</span>{{ reservation.email }}</p>
+                    <p><span>Phone No:</span>{{ reservation.phone_number }}</p> -->
+                    <p><span>Price:</span>Rs. {{ reservation.price }}</p>
+                    {% if reservation.payment_status == '1' %}
+                      <p><span>Payment status:</span><span style="color: red">{{ reservation.get_payment_status_display }}</span></p>
+                    {% elif reservation.payment_status == '2' %}
+                      <p><span>Payment status:</span><span style="color: green">{{ reservation.get_payment_status_display }}</span></p>
+                    {% else %}
+                      <p><span>Payment status:</span><span style="color: orange">{{ reservation.get_payment_status_display }}</span></p>  
+                    {% endif %}
+                  </div>
                 </div>
-                <div class="right">
-                  <h5>Contact Details</h5>
-                  <p><span>Name:</span>{{ user.username }}</p>
-                  <p><span>Email:</span>{{ reservation.email }}</p>
-                  <p><span>Phone No:</span>{{ reservation.phone_number }}</p>
+                <div class="btn-row">
+                  <a href="" class="btn btn-primary">Pay Now</a>
+                  <a href="" class="btn btn-secondary">Pay Later</a>
+                  <a href="#" class="btn btn-danger" data-reservation-id="{{ reservation.id }}">Delete Booking</a>
                 </div>
-              </div>
-              <div class="btn-row">
-                <a href="" class="btn btn-primary">Pay Now</a>
-                <a href="" class="btn btn-secondary">Pay Later</a>
-                <a href="" class="btn btn-danger">Delete Booking</a>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+        <div class="empty">
+          <img src = "{% static 'FIND.jpeg' %}">
+          <h5>You don't have any bookings!</h5>
+          <p>When you book a room, your bookings will appear here!</p>
+          <a href="{% url 'stays' %}">Book Now</a>
+        </div>
+      {% endif %}
 
     <footer>
         <div class="footer">
@@ -392,6 +478,22 @@
             retype.style.color = "var(--secondary-color)";
         }
     }
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var deleteButtons = document.querySelectorAll('.btn-danger');
+      
+        deleteButtons.forEach(function(button) {
+          button.addEventListener('click', function(event) {
+            event.preventDefault();
+            var confirmation = confirm("Are you sure you want to delete this booking?");
+            if (confirmation) {
+              var reservationId = this.dataset.reservationId;
+              window.location.href = '/delete-booking/' + reservationId + '/';
+            }
+          });
+        });
+      });
     </script>
 </body>
 </html>

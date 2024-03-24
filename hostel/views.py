@@ -11,8 +11,7 @@ from django.contrib.auth.decorators import login_required
 from hostel.booking_functions.availability import check_availability
 from django.views.generic import ListView
 from datetime import datetime, timedelta
-from django.db.models import Count
-from django.db.models.functions import Concat
+from django.shortcuts import redirect, get_object_or_404
 
 class RoomList(ListView):
     model = Room
@@ -131,9 +130,10 @@ def book_room(request):
         available_room_nos = stays_data['available_room_nos']
         amount=0
         user = User.objects.get(username=user_name.username)
+        length_of_stay = (datetime.strptime(check_out, "%Y-%m-%d") - datetime.strptime(check_in, "%Y-%m-%d")).days
         for r in available_room_nos:
             room_info = Room.objects.get(room_no = r)
-            amount=amount+int(room_info.rent)
+            amount=amount+(length_of_stay * int(room_info.rent))
             new_booking = Booking.objects.create(
                 user = user_name,
                 phone_number = phoneno,
@@ -180,6 +180,21 @@ def book_room(request):
         'available_room_nos': available_room_nos
     })
 
+
+def delete_booking(request, reservation_id):
+    reservation = get_object_or_404(Reservation, id=reservation_id)
+
+    # Retrieve room numbers associated with the reservation
+    room_numbers = reservation.room_numbers_list
+
+    # Delete bookings associated with these room numbers and within the check-in and check-out dates
+    Booking.objects.filter(room__room_no__in=room_numbers, 
+                            check_in__gte=reservation.check_in_date, 
+                            check_out__lte=reservation.check_out_date).delete()
+
+    reservation.delete()
+
+    return redirect('bookings')
 
 def logout(request):
     if request.user.is_authenticated:

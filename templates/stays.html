@@ -649,54 +649,6 @@
       </ul>
   </div>
 
-      <!-- <div class="form">
-        <form action="/" method="post">
-            {% csrf_token %}
-            <h3 class="form-title">Book Rooms</h3>
-            <input type="text" id="name" name="name" placeholder="Name" required>
-    
-            <input type="email" id="email" name="email" placeholder="Email" required>
-            
-            <div class="label">
-                <label for="checkin">Check-in Date:</label>
-                <input type="date" id="checkin" name="checkin" required>
-            </div>
-
-            <div class="label">
-                <label for="checkout">Check-out Date:</label>
-                <input type="date" id="checkout" name="checkout" required>
-            </div>
-    
-            <input type="number" id="rooms" name="rooms" placeholder="Number of Rooms" min="1" required>
-    
-            <textarea id="requests" name="requests" placeholder="Special Requests" rows="4"></textarea>
-    
-            <button type="submit">Book Room</button>
-        </form>
-      </div> -->
-
-      <!-- <div class="title">
-        <h3>Welcome to IIT Indore Hostels & Guest-House Bookings</h3>
-      </div>
-
-      <div class="form">
-        <form action="/" method="post">
-          {% csrf_token %}
-          <div class="input">
-            <input type="date" id="checkin" name="checkin" required>
-          </div>
-          <div class="input">
-            <input type="date" id="checkout" name="checkout" required>
-          </div>
-          <div class="input">
-            <input type="number" id="rooms" name="rooms" placeholder="Number of Rooms" min="1" required>
-          </div>
-          <div class="button">
-            <button type="submit">Book Room</button>
-          </div>
-        </form>
-      </div> -->
-
       <div class="body">
         <div class="title">
           <h3>Welcome to IIT Indore Hostels & Guest-House Bookings</h3>
@@ -710,12 +662,12 @@
                 {% load app_tags %}
                 <div class="input-container" id="date-picker-container">
                     <label for="date-checkin"><i class="fa-solid fa-right-to-bracket"></i> check-in</label>
-                    <input type="date" id="date-checkin" class="date-field" name="cin" min={%todays_date%} max={% max_date %} aria-label="Search" required="True">
+                    <input type="date" id="date-checkin" class="date-field" name="cin" min={% todays_date %} max={% max_date %} aria-label="Search" required="True">
                 </div>
 
                 <div class="input-container" id="date-picker-container">
                   <label for="date-checkout"><i class="fa-solid fa-right-from-bracket"></i> check-out</label>
-                  <input type="date" id="date-checkout" class="date-field" name="cout" min={% tomorrow %} max = {%max_date %} aria-label="Search" required="True">
+                  <input type="date" id="date-checkout" class="date-field" name="cout" max = {% max_date %} aria-label="Search" required="True">
                 </div>
 
                 <div class="input-container" class="norooms">
@@ -760,5 +712,27 @@
     </footer>
 
     <script src="{% static 'script.js' %}"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var checkinInput = document.getElementById("date-checkin");
+        var checkoutInput = document.getElementById("date-checkout");
+      
+        // Set the minimum check-out date to tomorrow initially
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var tomorrowISO = tomorrow.toISOString().split('T')[0];
+        checkoutInput.setAttribute("min", tomorrowISO);
+      
+        // Update the minimum check-out date when check-in date changes
+        checkinInput.addEventListener("change", function() {
+          var selectedDate = new Date(this.value);
+          var minCheckoutDate = new Date(selectedDate);
+          minCheckoutDate.setDate(minCheckoutDate.getDate() + 1); // Increment by 1 day
+          var minCheckoutISO = minCheckoutDate.toISOString().split('T')[0];
+          checkoutInput.setAttribute("min", minCheckoutISO);
+        });
+      });
+      </script>
+      
 </body>
 </html>

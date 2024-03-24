@@ -49,6 +49,7 @@ class Reservation(models.Model):
         ('2', 'Done'),
         ('3', 'Pay Later')
     )
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField()
     phone_number = models.CharField(max_length=15)
@@ -67,5 +68,8 @@ class Reservation(models.Model):
         self.room_numbers = ','.join(room_numbers)
 
     room_numbers_list = property(get_room_numbers, set_room_numbers)
+
+    def __str__(self):
+        return f'{self.user.username} has booked {self.number_of_rooms} rooms.'
 
 
