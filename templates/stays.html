@@ -733,6 +733,36 @@
         });
       });
       </script>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        var checkinInput = document.getElementById("date-checkin");
+        var checkoutInput = document.getElementById("date-checkout");
+    
+        checkinInput.addEventListener("input", function() {
+            // Parse the selected dates
+            var checkinDate = new Date(checkinInput.value);
+            var checkoutDate = new Date(checkoutInput.value);
+    
+            // If the check-in date is after the check-out date, reset the check-out date
+            if (checkinDate > checkoutDate) {
+                checkoutInput.value = "";
+            }
+          });
+      
+          checkoutInput.addEventListener("input", function() {
+              // Parse the selected dates
+              var checkinDate = new Date(checkinInput.value);
+              var checkoutDate = new Date(checkoutInput.value);
+      
+              // If the check-out date is before the check-in date, reset the check-in date
+              if (checkoutDate < checkinDate) {
+                  checkinInput.value = "";
+              }
+          });
+        });
+      </script>
+    
       
 </body>
 </html>
