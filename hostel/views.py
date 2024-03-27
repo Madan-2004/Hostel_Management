@@ -17,6 +17,83 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from paywix.payu import Payu
+from django.conf import settings
+
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from paywix.payu import Payu
+from hashlib import sha512
+import uuid
+
+# Retrieve the failure URL from settings
+
+payu_config = settings.PAYU_CONFIG
+merchant_key = payu_config.get('merchant_key')
+merchant_salt = payu_config.get('merchant_salt')
+furl = settings.PAYU_CONFIG.get('furl')
+surl = settings.PAYU_CONFIG.get('surl')
+mode = payu_config.get('mode')
+payu = Payu(merchant_key, merchant_salt, mode)
+
+@csrf_exempt
+def payu_demo(request):
+    if request.method == 'GET':
+        data = {
+            'amount': '10',
+            'firstname': 'rishikesh',
+            'email': 'rishidevkate@gmail.com',
+            'phone': '7276034203',
+            'productinfo': 'test',
+            'lastname': 'test',
+            'address1': 'test',
+            'address2': 'test',
+            'city': 'test',
+            'state': 'test',
+            'country': 'test',
+            'zipcode': 'tes',
+            'surl': surl,
+            'furl': furl
+        }
+        data.update({"txnid": "123456789"})
+
+        # Generate hash
+        hash_string = merchant_key + '|' + data['txnid'] + '|' + data['amount'] + '|' + data['productinfo'] + '|' + data['firstname'] + '|' + data['email'] + '|||||||||||' + merchant_salt
+        # hash_value = sha512(hash_string.encode('utf-8')).hexdigest()
+        hash_value = uuid.uuid4()
+
+        # Include hash in transaction data
+        data['hash'] = hash_value
+
+        # Initiate transaction
+        payu_data = payu.transaction(**data)
+        return render(request, 'payu_checkout.html', {"posted": payu_data})
+    else:
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+    
+@csrf_exempt
+def payu_success(request):
+    if request.method == 'POST':
+        data = {k: v[0] for k, v in dict(request.POST).items()}
+        response = payu.verify_transaction(data)
+        return JsonResponse(response)
+    else:
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+    
+@csrf_exempt
+def payu_failure(request):
+    if request.method == 'POST':
+        data = {k: v[0] for k, v in dict(request.POST).items()}
+        response = payu.verify_transaction(data)
+        return JsonResponse(response)
+    else:
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
+
 class RoomList(ListView):
     model = Room
 
@@ -163,7 +240,7 @@ def book_room(request):
 
         reservation.save()
 
-        return redirect('bookings')
+        return redirect('payu_demo')
 
     if not stays_data:
         # Handle case where session data is not available

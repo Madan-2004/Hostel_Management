@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'hostel.apps.HostelConfig',
     'paywix',
+    'payments'
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -262,7 +263,9 @@ PAYU_CONFIG = {
     "merchant_key": "3o6jgxhp",
     "merchant_salt": "67bAgZX1B3",
     "mode": "test",
-    "success_url": "http://127.0.0.1:8000/success",
-    "failure_url": "http://127.0.0.1:8000/failure"
+    "furl": "http://127.0.0.1:8000/payu_failure/",
+    "surl": "http://127.0.0.1:8000/payu_success/"
 }
+
+PAYMENT_HOST = 'example.com'
 
