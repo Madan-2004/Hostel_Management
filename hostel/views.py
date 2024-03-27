@@ -1,4 +1,5 @@
 from django.shortcuts import render ,redirect
+from django.http import JsonResponse
 from django.http import HttpResponse , HttpResponseRedirect
 from .models import Room, Booking, Reservation
 from django.db.models import Count, Value
@@ -12,6 +13,9 @@ from hostel.booking_functions.availability import check_availability
 from django.views.generic import ListView
 from datetime import datetime, timedelta
 from django.shortcuts import redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 class RoomList(ListView):
     model = Room
