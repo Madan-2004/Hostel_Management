@@ -1,17 +1,43 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceed to Pay</title>
+    <style>
+        .btn{
+
+        }
+    </style>
+</head>
 <body>
-    <form action='https://test.payu.in/_payment' method='post'>
-    <input type="hidden" name="key" value="SyLzQC" />
-    <input type="hidden" name="txnid" value="12345" />
-    <input type="hidden" name="productinfo" value="phone" />
-    <input type="hidden" name="amount" value="1000" />
-    <input type="hidden" name="email" value="test@gmail.com" />
-    <input type="hidden" name="firstname" value="bharat" />
+    
+</body>
+</html>
+<body>
+    <h4>Proceed to Pay!</h4>
+    <h5>Are you sure you want to proceed the payment of Rs {{amount}}?</h5>
+    <form action='https://secure.payu.in/_payment' method='post'>
+    <input type="hidden" name="key" value="{{key}}" />
+    <input type="hidden" name="txnid" value="{{txnid}}" />
+    <input type="hidden" name="productinfo" value="{{productinfo}}" />
+    <input type="hidden" name="amount" value="{{amount}}" />
+    <input type="hidden" name="email" value="{{email}}" />
+    <input type="hidden" name="firstname" value="{{firstname}}" />
     <input type="hidden" name="lastname" value="" />
-    <input type="hidden" name="surl" value="www.amazon.com" />
-    <input type="hidden" name="furl" value="www.flipkart.com" />
-    <input type="hidden" name="phone" value="6268760066"/>
-    <input type="hidden" name="hash" value = "f1ba7420461f9e4ad7a5875fe3a1d10635e2f6468ca5b8d9584a5f7f1e32bf67ccadfd94ebbeffefbbf437b40ff1342aeb5575bdb4d19598e00659192f647873">
-    <input type="submit" value="submit"> </form>
-    </body>
-    </html>
+    <input type="hidden" name="surl" value="{{surl}}" />
+    <input type="hidden" name="furl" value="{{furl}}" />
+    <input type="hidden" name="phone" value="{{phone}}"/>
+    <input type="hidden" name="hash" value = "{{hash}}">
+    <input type="hidden" name="service_provider" value="payu_paisa">
+    <input type="submit" class="btn" value="submit" placeholder="Proceed to Pay"> 
+    <button type="button" onclick="cancelPayment()" class="btn">Cancel</button>
+</form>
+<script>
+    function cancelPayment() {
+        window.location.href = "{% url 'bookings' %}";
+    }
+</script>
+</body>
+</html>

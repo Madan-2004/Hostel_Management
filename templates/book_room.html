@@ -353,11 +353,11 @@
                     </div>
                     <div class="content">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        <input type="email" class="input-group" placeholder="Email-Id" name="email" required>
+                        <input type="email" id="email" class="input-group" placeholder="Email-Id" name="email" required>
                     </div>
                     <div class="content">
                         <i class="fa fa-phone" aria-hidden="true"></i>
-                        <input type="text" class="input-group" placeholder="Phone number" name="phoneno" required>
+                        <input type="text" id="phone" class="input-group" placeholder="Phone number" name="phoneno" required>
                     </div>
                     <div class="content">
                       <i class="fa-solid fa-right-to-bracket"></i>
@@ -414,22 +414,31 @@
       function confirmBooking() {
           // Here you can perform any additional actions, like submitting the form
           // For now, let's just alert a message
-          alert('Booking confirmed!'); // You can replace this with your actual booking confirmation logic
-      }
-  
-      // Function to prompt user for confirmation
-      function promptConfirmation() {
-          if (confirm('Are you sure you want to proceed with the booking?')) {
-              // If user confirms, proceed with booking
-              confirmBooking();
-          } else {
-              // If user cancels, do nothing
-              // You can add additional logic here if needed
+          var email = document.getElementById('email').value.trim();
+          var phone = document.getElementById('phone').value.trim();
+
+          if (email === '' || phone === '') {
+            alert('Please fill out both email and phone number fields.');
+            return; // Exit the function if fields are not filled
+          }
+          else{
+            alert('Your booking has been made. Pay to confirm booking!'); // You can replace this with your actual booking confirmation logic
           }
       }
   
+      // Function to prompt user for confirmation
+      //function promptConfirmation() {
+        //  if (confirm('Are you sure you want to proceed with the booking?')) {
+              // If user confirms, proceed with booking
+          //    confirmBooking();
+          //} else {
+              // If user cancels, do nothing
+              // You can add additional logic here if needed
+         // }
+      //}
+  
       // Add event listener to the "Book Now" button
-      document.getElementById('submit-btn').addEventListener('click', promptConfirmation);
+      document.getElementById('submit-btn').addEventListener('click', confirmBooking);
   </script>
 </body>
 </html>

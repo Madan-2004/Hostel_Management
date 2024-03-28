@@ -382,7 +382,7 @@
                   </div>
                 </div>
                 <div class="btn-row">
-                  <a href="" class="btn btn-primary">Pay Now</a>
+                  <a href="{% url 'pay_now' reservation.id %}" class="btn btn-primary">Pay Now</a>
                   <a href="" class="btn btn-secondary">Pay Later</a>
                   <a href="#" class="btn btn-danger" data-reservation-id="{{ reservation.id }}">Delete Booking</a>
                 </div>

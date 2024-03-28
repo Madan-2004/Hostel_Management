@@ -260,8 +260,8 @@ JAZZMIN_UI_TWEAKS = {
 # No specific schema, you can use any other methods
 
 PAYU_CONFIG = {
-    "merchant_key": "3o6jgxhp",
-    "merchant_salt": "67bAgZX1B3",
+    "merchant_key": "w79Eq1",
+    "merchant_salt": "FZiUPMLD",
     "mode": "test",
     "furl": "http://127.0.0.1:8000/payu_failure/",
     "surl": "http://127.0.0.1:8000/payu_success/"

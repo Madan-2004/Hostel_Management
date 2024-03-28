@@ -187,7 +187,7 @@ def book_room(request):
 
         reservation.save()
 
-        return redirect('payu_demo')
+        return redirect('bookings')
 
     if not stays_data:
         # Handle case where session data is not available
@@ -230,21 +230,22 @@ def logout(request):
     return render(request,'index.html') 
 
 @login_required
-def payu_demo(request):
+def pay_now(request, reservation_id):
     # Set the API endpoint URL
-    apiEndpoint = "https://test.payu.in/_payment"
+    reservation = Reservation.objects.get(id = reservation_id)
+    apiEndpoint = "https://secure.payu.in/_payment"
 
     # Set the merchant key and salt
-    merchantKey = "SyLzQC"
-    salt = "tZFWYxsdl1K70J4iAzB5gPwxx4ucLwKA"
+    merchantKey = settings.PAYU_CONFIG.get('merchant_key')
+    salt = settings.PAYU_CONFIG.get('merchant_salt')
 
     # Set the order details
-    amount = "1000"
-    productInfo = "phone"
-    firstName = "bharat"
-    email = "test@gmail.com"
-    phone = "6268760066"
-    txnId = "12345"
+    amount = reservation.price
+    productInfo = "IIT Indore"
+    firstName = reservation.user.username
+    email = reservation.email
+    phone = reservation.phone_number
+    txnId = str(int(time.time())) 
     surl = "www.amazon.com"
     furl = "www.flipkart.com"
 
@@ -257,6 +258,8 @@ def payu_demo(request):
         "firstname": firstName,
         "email": email,
         "phone": phone,
+        "surl": surl,
+        "furl": furl
     }
 
     # Generate the hash
@@ -273,8 +276,8 @@ def payu_demo(request):
 
     # Output the URL for the PayU API request
     print(url)
-    return render(request, "payment_form.html")
+    return render(request, "payment_form.html", params)
 
 def generateHash(params, salt):
-    hashString = params["key"] + "|" + params["txnid"] + "|" + params["amount"] + "|" + params["productinfo"] + "|" + params['firstname'] + "|" + params['email'] + "|" +"|" +"|" +"|" +"|" +"|" + "|" +"|" +"|" +"|" + salt
+    hashString = params["key"] + "|" + params["txnid"] + "|" + str(params["amount"]) + "|" + params["productinfo"] + "|" + params['firstname'] + "|" + params['email'] + "|" +"|" +"|" +"|" +"|" +"|" + "|" +"|" +"|" +"|" + "|" + salt
     return sha512(hashString.encode('utf-8')).hexdigest()
