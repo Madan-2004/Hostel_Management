@@ -23,6 +23,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from paywix.payu import Payu
 from django.conf import settings
+import time, urllib
 
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
@@ -39,60 +40,6 @@ furl = settings.PAYU_CONFIG.get('furl')
 surl = settings.PAYU_CONFIG.get('surl')
 mode = payu_config.get('mode')
 payu = Payu(merchant_key, merchant_salt, mode)
-
-@csrf_exempt
-def payu_demo(request):
-    if request.method == 'GET':
-        data = {
-            'amount': '10',
-            'firstname': 'rishikesh',
-            'email': 'rishidevkate@gmail.com',
-            'phone': '7276034203',
-            'productinfo': 'test',
-            'lastname': 'test',
-            'address1': 'test',
-            'address2': 'test',
-            'city': 'test',
-            'state': 'test',
-            'country': 'test',
-            'zipcode': 'tes',
-            'surl': surl,
-            'furl': furl
-        }
-        data.update({"txnid": "123456789"})
-
-        # Generate hash
-        hash_string = merchant_key + '|' + data['txnid'] + '|' + data['amount'] + '|' + data['productinfo'] + '|' + data['firstname'] + '|' + data['email'] + '|||||||||||' + merchant_salt
-        # hash_value = sha512(hash_string.encode('utf-8')).hexdigest()
-        hash_value = uuid.uuid4()
-
-        # Include hash in transaction data
-        data['hash'] = hash_value
-
-        # Initiate transaction
-        payu_data = payu.transaction(**data)
-        return render(request, 'payu_checkout.html', {"posted": payu_data})
-    else:
-        return JsonResponse({"error": "Method not allowed"}, status=405)
-    
-@csrf_exempt
-def payu_success(request):
-    if request.method == 'POST':
-        data = {k: v[0] for k, v in dict(request.POST).items()}
-        response = payu.verify_transaction(data)
-        return JsonResponse(response)
-    else:
-        return JsonResponse({"error": "Method not allowed"}, status=405)
-    
-@csrf_exempt
-def payu_failure(request):
-    if request.method == 'POST':
-        data = {k: v[0] for k, v in dict(request.POST).items()}
-        response = payu.verify_transaction(data)
-        return JsonResponse(response)
-    else:
-        return JsonResponse({"error": "Method not allowed"}, status=405)
-
 
 class RoomList(ListView):
     model = Room
@@ -281,3 +228,53 @@ def logout(request):
     if request.user.is_authenticated:
         auth_logout(request)
     return render(request,'index.html') 
+
+@login_required
+def payu_demo(request):
+    # Set the API endpoint URL
+    apiEndpoint = "https://test.payu.in/_payment"
+
+    # Set the merchant key and salt
+    merchantKey = "SyLzQC"
+    salt = "tZFWYxsdl1K70J4iAzB5gPwxx4ucLwKA"
+
+    # Set the order details
+    amount = "1000"
+    productInfo = "phone"
+    firstName = "bharat"
+    email = "test@gmail.com"
+    phone = "6268760066"
+    txnId = "12345"
+    surl = "www.amazon.com"
+    furl = "www.flipkart.com"
+
+    # Create a map of parameters to pass to the PayU API
+    params = {
+        "key": merchantKey,
+        "txnid": txnId,
+        "amount": amount,
+        "productinfo": productInfo,
+        "firstname": firstName,
+        "email": email,
+        "phone": phone,
+    }
+
+    # Generate the hash
+    hashValue = generateHash(params, salt)
+
+    # Add the hash to the parameter map
+    params["hash"] = hashValue
+
+    # Encode the parameters for use in the URL
+    encodedParams = urllib.parse.urlencode(params)
+
+    # Build the URL for the PayU API request
+    url = apiEndpoint + "?" + encodedParams
+
+    # Output the URL for the PayU API request
+    print(url)
+    return render(request, "payment_form.html")
+
+def generateHash(params, salt):
+    hashString = params["key"] + "|" + params["txnid"] + "|" + params["amount"] + "|" + params["productinfo"] + "|" + params['firstname'] + "|" + params['email'] + "|" +"|" +"|" +"|" +"|" +"|" + "|" +"|" +"|" +"|" + salt
+    return sha512(hashString.encode('utf-8')).hexdigest()

@@ -12,7 +12,5 @@ urlpatterns = [
     path('book_room/', views.book_room, name='book_room'),
     path('not_available/<int:rem>/', views.not_available, name='not_available'),
     path('delete-booking/<int:reservation_id>/', delete_booking, name='delete_booking'),
-    path('payu_demo/', views.payu_demo, name='payu_demo'),
-    path('payu_success/', views.payu_success, name='payu_success'),
-    path('payu_failure/', views.payu_failure, name='payu_failure')
+    path('payu_demo/', views.payu_demo, name='payu_demo')
 ]
