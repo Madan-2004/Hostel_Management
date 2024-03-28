@@ -28,8 +28,8 @@ import time, urllib
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from paywix.payu import Payu
-from hashlib import sha512
-import uuid
+import hashlib
+# import uuid
 
 # Retrieve the failure URL from settings
 
@@ -258,8 +258,6 @@ def pay_now(request, reservation_id):
         "firstname": firstName,
         "email": email,
         "phone": phone,
-        "surl": surl,
-        "furl": furl
     }
 
     # Generate the hash
@@ -279,5 +277,5 @@ def pay_now(request, reservation_id):
     return render(request, "payment_form.html", params)
 
 def generateHash(params, salt):
-    hashString = params["key"] + "|" + params["txnid"] + "|" + str(params["amount"]) + "|" + params["productinfo"] + "|" + params['firstname'] + "|" + params['email'] + "|" +"|" +"|" +"|" +"|" +"|" + "|" +"|" +"|" +"|" + "|" + salt
+    hashString = params["key"] + "|" + params["txnid"] + "|" + params["amount"] + "|" + params["productinfo"] + "|" + params['firstname'] + "|" + params['email'] + "|" +"|" +"|" +"|" +"|" +"|" + "|" +"|" +"|" +"|" + salt
     return sha512(hashString.encode('utf-8')).hexdigest()
