@@ -8,66 +8,6 @@
     <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'navbar.css' %}">
     <title>Your Bookings</title>
-    <!-- <style>
-      .booking-card {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        margin-bottom: 20px;
-      }
-      
-      .booking-header {
-        background-color: #007bff;
-        color: #fff;
-        padding: 10px;
-        border-radius: 5px 5px 0 0;
-      }
-      
-      .booking-details,
-      .contact-details {
-        padding: 10px;
-      }
-      
-      .booking-actions {
-        display: flex;
-        justify-content: flex-end;
-        padding: 10px;
-      }
-      
-      .btn {
-        padding: 5px 10px;
-        border: none;
-        border-radius: 3px;
-        color: #fff;
-        cursor: pointer;
-        margin-left: 10px;
-      }
-      
-      .btn-danger {
-        background-color: #dc3545;
-      }
-      
-      .btn-primary {
-        background-color: #007bff;
-      }
-      
-      .btn-secondary {
-        background-color: #6c757d;
-      }
-      
-      /* Responsive styles */
-      @media (max-width: 768px) {
-        .booking-actions {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-      
-        .btn {
-          margin-left: 0;
-          margin-bottom: 10px;
-        }
-      }
-    </style> -->
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;800&display=swap");
       * {
@@ -300,7 +240,8 @@
 
       
     </style>
-  </head>
+</head>
+
 <body>
     <div class="nav1">
         <div>
@@ -382,9 +323,17 @@
                   </div>
                 </div>
                 <div class="btn-row">
-                  <a href="{% url 'pay_now' reservation.id %}" class="btn btn-primary">Pay Now</a>
-                  <a href="" class="btn btn-secondary">Pay Later</a>
-                  <a href="#" class="btn btn-danger" data-reservation-id="{{ reservation.id }}">Delete Booking</a>
+                  {% if reservation.payment_status == '2' %}
+                      <a href="{% url 'download_invoice' reservation.id %}" class="btn btn-primary">Download Invoice</a>
+                  {% else %}
+                      {% if reservation.payment_status == '1' %}
+                          <!-- Display pay now button -->
+                      <a href="{% url 'pay_now' reservation.id %}" class="btn btn-primary">Pay Now</a>
+                      {% endif %}
+                      <!-- Display pay later button -->
+                      <a href="#" class="btn btn-secondary">Pay Later</a>
+                      <a href="#" class="btn btn-danger" data-reservation-id="{{ reservation.id }}">Delete Booking</a>
+                  {% endif %}
                 </div>
               </div>
             </div>

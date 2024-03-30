@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Edu+SA+Beginner:wght@400;500;600;700&family=Lato:wght@300;400&family=Poppins:wght@300;400;500;600;700&family=Ubuntu:wght@300;400;700&display=swap');
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Ubuntu', cursive;
+            font-weight: 400;
+        }
+
+        :root{
+            --main-color: #fff;
+            --secondary-color: rgb(34,122,191);
+            --primary-color: #000;
+        }
+        /* Define your CSS styles for the invoice here */
+
+        h3{
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .invoice-container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .invoice-details {
+            margin-bottom: 20px;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-table th, .invoice-table td {
+            border: 1px solid var(--secondary-color);
+            padding: 8px;
+            text-align: left;
+        }
+        .invoice-total {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <h2>Invoice</h2>
+        </div>
+        <div class="invoice-details">
+            <h3>Reservation Details</h3>
+            <p><strong>Reservation ID:</strong> {{ reservation.id }}</p>
+            <p><strong>User:</strong> {{ reservation.user.username }}</p>
+            <p><strong>Email:</strong> {{ reservation.email }}</p>
+            <p><strong>Phone Number:</strong> {{ reservation.phone_number }}</p>
+            <p><strong>Number of Rooms:</strong> {{ reservation.number_of_rooms }}</p>
+            <p><strong>Check-in Date:</strong> {{ reservation.check_in_date }}</p>
+            <p><strong>Check-out Date:</strong> {{ reservation.check_out_date }}</p>
+            <p><strong>Room Type:</strong> {{ reservation.get_room_type_display }}</p>
+            <p><strong>Room Numbers:</strong> {{ reservation.room_numbers_list }}</p>
+            <p><strong>Price:</strong> {{ reservation.price }}</p>
+        </div>
+        <div class="invoice-details">
+            <h3>Transaction Details</h3>
+            <p><strong>Transaction ID:</strong> {{ transaction.txnid }}</p>
+            <p><strong>Net Amount Debit:</strong> {{ transaction.net_amount_debit }}</p>
+            <p><strong>Phone:</strong> {{ transaction.phone }}</p>
+            <p><strong>Product Info:</strong> {{ transaction.productinfo }}</p>
+            <p><strong>Status:</strong> {{ transaction.status }}</p>
+            <p><strong>First Name:</strong> {{ transaction.firstname }}</p>
+            <p><strong>Added On:</strong> {{ transaction.addedon }}</p>
+            <p><strong>PayU Money ID:</strong> {{ transaction.payuMoneyId }}</p>
+            <p><strong>MIH Pay ID:</strong> {{ transaction.mihpayid }}</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -308,6 +308,8 @@ def payment_response(request):
         new_payment_response.save()
 
         if request.POST.get('status') == "success":
+            reservation.payment_status = '2'  # '2' represents 'Done' in PAYMENT_CHOICES
+            reservation.save()
             # Redirect to payment success page
             return redirect('payment_success', txnid=request.POST.get('txnid'))
         elif request.POST.get('status') == "failure":
@@ -318,22 +320,76 @@ def payment_response(request):
             return HttpResponseBadRequest("Invalid payment status")
     else:
         return HttpResponseBadRequest("Invalid request method")
+    
 
 def payment_success(request, txnid):
-    if request.method == "POST":
-        reservation_id = request.GET.get('reservation_id')
-        txnid = request.GET.get('txnid')
+    transaction = get_object_or_404(Transaction, txnid=txnid)
+    reservation_id = transaction.reservation.id
+    
+    send_invoice_email(transaction)
 
-        # Retrieve reservation object using reservation_id
-        try:
-            reservation = Reservation.objects.get(id=reservation_id)
-        except Reservation.DoesNotExist:
-            return HttpResponseBadRequest("Invalid reservation ID")
+    return render(request, 'payment_success.html', {'txnid': txnid, 'reservation_id': reservation_id})
 
-        # Pass reservation_id and txnid to the template
-        return render(request, 'payment_success.html', {'txnid': txnid})
-
-    return HttpResponseBadRequest("Method not allowed")
 
 def payment_failure(request, txnid):
-    return render(request, 'payment_failure.html', {'txnid': txnid})
+    transaction = get_object_or_404(Transaction, txnid=txnid)
+    reservation = transaction.reservation
+    number_of_rooms = reservation.number_of_rooms
+    addedon =  transaction.addedon
+    amount = transaction.amount
+    error_Message = transaction.error_Message
+    return render(request, 'payment_failure.html', {'txnid': txnid, 'addedon': addedon, 'amount': amount, 'error_Message': error_Message, 'number_of_rooms': number_of_rooms})
+
+from django.template.loader import get_template
+from django.conf import settings
+from xhtml2pdf import pisa
+
+def generate_invoice_pdf(request, reservation_id):
+    # Retrieve transaction details
+    reservation = get_object_or_404(Reservation, id=reservation_id)
+
+    # Retrieve transaction associated with the reservation
+    try:
+        transaction = get_object_or_404(Transaction, reservation=reservation)
+        txnid = transaction.txnid
+    except Transaction.DoesNotExist:
+        # Handle the case where no transaction is found for the reservation
+        return HttpResponseBadRequest("No transaction found for this reservation")
+
+    # Render invoice HTML template with transaction details
+    template_path = 'invoice.html'
+    context = {'transaction': transaction, 'reservation': reservation}
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # Create PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="invoice_{txnid}.pdf"'
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+def send_invoice_email(transaction):
+    subject = 'Invoice for Your Purchase'
+    from_email = settings.EMAIL_HOST_USER
+    to_email = transaction.email
+    reservation = transaction.reservation
+
+    # Render HTML content from template
+    html_content = render_to_string('invoice.html', {'transaction': transaction, 'reservation': reservation})
+
+    # Create a text/plain version of the HTML email (for clients that do not support HTML emails)
+    text_content = strip_tags(html_content)
+
+    # Create EmailMultiAlternatives object to include both HTML and text content
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+    msg.attach_alternative(html_content, "text/html")
+
+    # Send email
+    msg.send()

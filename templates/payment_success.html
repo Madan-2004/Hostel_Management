@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +6,75 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Success</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Edu+SA+Beginner:wght@400;500;600;700&family=Lato:wght@300;400&family=Poppins:wght@300;400;500;600;700&family=Ubuntu:wght@300;400;700&display=swap');
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Ubuntu', cursive;
+            font-weight: 400;
+        }
+
+        :root{
+            --main-color: #fff;
+            --secondary-color: rgb(34,122,191);
+            --primary-color: #000;
+        }
+
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            text-align: center;
+            flex-direction: column;
+            padding: 5%;
+        }
+
+        body h4{
+            color: green;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        body h5{
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        body h5 span{
+            color: #000;
+        }
+
+        .btn{
+            background: transparent;
+            border: 1.5px solid var(--secondary-color);
+            border-radius: 20px;
+            text-decoration: none;
+            width: 150px;
+            text-align: center;
+            padding: 8px;
+            color: var(--secondary-color);
+            cursor: pointer;
+            margin-right: 30px;
+            margin-top: 30px;
+        }
+        
+        .btn:hover{
+            color: #fff;
+            background-color: var(--secondary-color);
+        }
+    </style>
 </head>
 <body>
-    <h1>Payment Successful!</h1>
-    <p>Transaction ID: {{ txnid }}</p>
-    <p>Reservation ID: {{ reservation_id }}</p>
-    <!-- Other content -->
+    <h4>Payment Successful!</h4>
+    <h5>Transaction ID: {{ txnid }}</h5>
+    <h5>Reservation ID: {{ reservation_id }}</h5>
+    <p>The invoice is sent to your email. Please check it for further details.</p>
+    <a href="{% url 'bookings' %}" class="btn">View Bookings</a>
 </body>
 </html>

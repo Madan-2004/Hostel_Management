@@ -88,4 +88,4 @@ class Transaction(models.Model):
     mihpayid = models.CharField(max_length = 255)
 
     def __str__(self):
-        return f"{self.txnid}"
+        return f"{self.txnid} - {self.status}."

@@ -260,12 +260,18 @@ JAZZMIN_UI_TWEAKS = {
 # No specific schema, you can use any other methods
 
 PAYU_CONFIG = {
-    "merchant_key": "w79Eq1",
-    "merchant_salt": "FZiUPMLD",
-    "mode": "test",
+    "merchant_key": os.environ.get("merchant_key"),
+    "merchant_salt": os.environ.get("merchant_salt"),
+    "mode": "live",
     "furl": "http://127.0.0.1:8000/payu_failure/",
     "surl": "http://127.0.0.1:8000/payu_success/"
 }
 
 PAYMENT_HOST = 'example.com'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')

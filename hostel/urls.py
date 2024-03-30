@@ -15,5 +15,6 @@ urlpatterns = [
     path('pay_now/<int:reservation_id>/', views.pay_now, name='pay_now'),
     path('payment_response/', views.payment_response, name='payment_response'),
     path('payment_success/<str:txnid>/', views.payment_success, name='payment_success'),
-    path('payment_failure/<str:txnid>/', views.payment_failure, name='payment_failure')
+    path('payment_failure/<str:txnid>/', views.payment_failure, name='payment_failure'),
+    path('download-invoice/<int:reservation_id>/', views.generate_invoice_pdf, name='download_invoice')
 ]
