@@ -12,5 +12,8 @@ urlpatterns = [
     path('book_room/', views.book_room, name='book_room'),
     path('not_available/<int:rem>/', views.not_available, name='not_available'),
     path('delete-booking/<int:reservation_id>/', delete_booking, name='delete_booking'),
-    path('pay_now/<int:reservation_id>/', views.pay_now, name='pay_now')
+    path('pay_now/<int:reservation_id>/', views.pay_now, name='pay_now'),
+    path('payment_response/', views.payment_response, name='payment_response'),
+    path('payment_success/<str:txnid>/', views.payment_success, name='payment_success'),
+    path('payment_failure/<str:txnid>/', views.payment_failure, name='payment_failure')
 ]

@@ -6,6 +6,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proceed to Pay</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Edu+SA+Beginner:wght@400;500;600;700&family=Lato:wght@300;400&family=Poppins:wght@300;400;500;600;700&family=Ubuntu:wght@300;400;700&display=swap');
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Ubuntu', cursive;
+            font-weight: 400;
+        }
+
+        :root{
+            --main-color: #fff;
+            --secondary-color: rgb(34,122,191);
+            --primary-color: #000;
+        }
+
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        body h4{
+            color: var(--secondary-color);
+            font-size: 25px;
+            margin-bottom: 20px;
+        }
+
+        body h5{
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        input.btn{
+            background: transparent;
+            border: 1.5px solid var(--secondary-color);
+            border-radius: 20px;
+            text-decoration: none;
+            width: 100px;
+            text-align: center;
+            padding: 8px;
+            color: var(--secondary-color);
+            cursor: pointer;
+            margin-right: 30px;
+        }
+        
+        input.btn:hover{
+            color: #fff;
+            background-color: var(--secondary-color);
+        }
+
+        button.cancel{
+            background: transparent;
+            border: 1.5px solid red;
+            border-radius: 20px;
+            text-decoration: none;
+            width: 100px;
+            text-align: center;
+            padding: 8px;
+            color: red;
+            cursor: pointer;
+        }
+        
+        button.cancel:hover{
+            color: #fff;
+            background-color: red;
+        }
     </style>
 </head>
 <body>
@@ -13,9 +83,10 @@
 </body>
 </html>
 <body>
-    <h4>Proceed to Pay!</h4>
-    <h5>Are you sure you want to proceed the payment of Rs {{amount}}?</h5>
+    <div><h4>Proceed to Pay!</h4></div>
+    <div><h5>Are you sure you want to proceed the payment of Rs {{amount}}?</h5></div>
     <form action='https://secure.payu.in/_payment' method='post'>
+        {% csrf_token %}
     <input type="hidden" name="key" value="{{key}}" />
     <input type="hidden" name="txnid" value="{{txnid}}" />
     <input type="hidden" name="productinfo" value="{{productinfo}}" />
@@ -28,8 +99,8 @@
     <input type="hidden" name="phone" value="{{phone}}"/>
     <input type="hidden" name="hash" value = "{{hash}}">
     <input type="hidden" name="service_provider" value="payu_paisa">
-    <input type="submit" class="btn" value="submit" placeholder="Proceed to Pay"> 
-    <button type="button" onclick="cancelPayment()" class="btn">Cancel</button>
+    <input type="submit" class="btn" value="submit">
+    <button type="button" class="cancel" onclick="cancelPayment()" class="btn">Cancel</button>
 </form>
 <script>
     function cancelPayment() {

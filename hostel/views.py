@@ -1,7 +1,7 @@
 from django.shortcuts import render ,redirect
 from django.http import JsonResponse
-from django.http import HttpResponse , HttpResponseRedirect
-from .models import Room, Booking, Reservation
+from django.http import HttpResponse , HttpResponseRedirect, HttpResponseBadRequest
+from .models import Room, Booking, Reservation, Transaction
 from django.db.models import Count, Value
 from django.db import models
 # from .models import Hotels,Rooms,Reservation
@@ -80,7 +80,7 @@ def stays(request):
 
         i = 0
         for room in room_list:
-            if check_availability(room, checkin_date, checkout_date) and i < capacity:
+            if check_availability(room, checkin_date, checkout_date) and i < capacity and room.institute_use == False:
                 available_rooms.append(room)
                 i = i + 1
 
@@ -246,8 +246,8 @@ def pay_now(request, reservation_id):
     email = reservation.email
     phone = reservation.phone_number
     txnId = str(int(time.time())) 
-    surl = "www.amazon.com"
-    furl = "www.flipkart.com"
+    surl = f"http://127.0.0.1:8000/payment_response/?reservation_id={reservation_id}"
+    furl = f"http://127.0.0.1:8000/payment_response/?reservation_id={reservation_id}"
 
     # Create a map of parameters to pass to the PayU API
     params = {
@@ -258,6 +258,8 @@ def pay_now(request, reservation_id):
         "firstname": firstName,
         "email": email,
         "phone": phone,
+        "surl": surl,
+        "furl": furl
     }
 
     # Generate the hash
@@ -277,5 +279,61 @@ def pay_now(request, reservation_id):
     return render(request, "payment_form.html", params)
 
 def generateHash(params, salt):
-    hashString = params["key"] + "|" + params["txnid"] + "|" + params["amount"] + "|" + params["productinfo"] + "|" + params['firstname'] + "|" + params['email'] + "|" +"|" +"|" +"|" +"|" +"|" + "|" +"|" +"|" +"|" + salt
+    hashString = params["key"] + "|" + params["txnid"] + "|" + str(params["amount"]) + "|" + params["productinfo"] + "|" + params['firstname'] + "|" + params['email'] + "|" +"|" +"|" +"|" +"|" +"|" + "|" +"|" +"|" +"|" + "|" + salt
     return sha512(hashString.encode('utf-8')).hexdigest()
+
+@csrf_exempt
+def payment_response(request):
+    if request.method == "POST":
+        response = JsonResponse(dict(request.POST.items()))
+        reservation_id = request.GET.get('reservation_id')
+        reservation = get_object_or_404(Reservation, id=reservation_id)
+        new_payment_response = Transaction.objects.create(
+            txnid = request.POST.get('txnid'),
+            reservation = reservation,
+            error_Message = request.POST.get('error_Message'),
+            net_amount_debit = request.POST.get('net_amount_debit'),
+            phone = request.POST.get('phone'),
+            productinfo = request.POST.get('productinfo'),
+            status = request.POST.get('status'),
+            firstname = request.POST.get('firstname'),
+            lastname = request.POST.get('lastname'),
+            addedon =  request.POST.get('addedon'),
+            encryptedPaymentId = request.POST.get('encryptedPaymentId'),
+            email = request.POST.get('email'),
+            amount = request.POST.get('amount'),
+            payuMoneyId = request.POST.get('payuMoneyId'),
+            mihpayid = request.POST.get('mihpayid')
+        )
+        new_payment_response.save()
+
+        if request.POST.get('status') == "success":
+            # Redirect to payment success page
+            return redirect('payment_success', txnid=request.POST.get('txnid'))
+        elif request.POST.get('status') == "failure":
+            # Redirect to payment failure page
+            return redirect('payment_failure', txnid=request.POST.get('txnid'))
+        else:
+            # Handle other statuses if needed
+            return HttpResponseBadRequest("Invalid payment status")
+    else:
+        return HttpResponseBadRequest("Invalid request method")
+
+def payment_success(request, txnid):
+    if request.method == "POST":
+        reservation_id = request.GET.get('reservation_id')
+        txnid = request.GET.get('txnid')
+
+        # Retrieve reservation object using reservation_id
+        try:
+            reservation = Reservation.objects.get(id=reservation_id)
+        except Reservation.DoesNotExist:
+            return HttpResponseBadRequest("Invalid reservation ID")
+
+        # Pass reservation_id and txnid to the template
+        return render(request, 'payment_success.html', {'txnid': txnid})
+
+    return HttpResponseBadRequest("Method not allowed")
+
+def payment_failure(request, txnid):
+    return render(request, 'payment_failure.html', {'txnid': txnid})
