@@ -191,11 +191,16 @@
           <p><i class="fa-solid fa-bars"></i></p>
         </div>
         <!-- <div class="title">
-          <a href="/" class="lo">
+          <a href="https://www.iiti.ac.in/" class="lo">
             <img src="{% static 'IITI_Logo.png' %}" class="logo">
             <h3>IIT Indore</h3>
           </a>
       </div> -->
+      <div class="name">
+        {% if user.is_authenticated %}
+        <p>Hello {{user.username}}</p>
+        {% endif %}
+      </div>
     </div>
     <div class="side-bar">
         <div id="close"><i class="fa-solid fa-xmark"></i></div>

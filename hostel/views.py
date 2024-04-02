@@ -199,7 +199,7 @@ def book_room(request):
     category = stays_data['category']
     available_room_nos = stays_data['available_room_nos']
 
-
+    print(request.user)
     return render(request, 'book_room.html', {
         'check_in': check_in,
         'check_out': check_out,
@@ -253,7 +253,7 @@ def pay_now(request, reservation_id):
     params = {
         "key": merchantKey,
         "txnid": txnId,
-        "amount": amount,
+        "amount": 1,
         "productinfo": productInfo,
         "firstname": firstName,
         "email": email,
@@ -350,7 +350,7 @@ def generate_invoice_pdf(request, reservation_id):
 
     # Retrieve transaction associated with the reservation
     try:
-        transaction = get_object_or_404(Transaction, reservation=reservation)
+        transaction = get_object_or_404(Transaction, reservation=reservation, status = "success")
         txnid = transaction.txnid
     except Transaction.DoesNotExist:
         # Handle the case where no transaction is found for the reservation
