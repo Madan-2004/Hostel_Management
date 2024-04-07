@@ -8,187 +8,7 @@
     <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'navbar.css' %}">
     <title>Stays</title>
-    <!-- <style>
-      /*  :root{
-            --primary-color: #000;
-            --secondary-color: rgb(30,144,255);
-          } */
-  
-         /* body{
-              background-image: url("{% static 'hostel.jpg' %}");
-              background-size: cover;
-              background-position: center;
-              background-repeat: no-repeat;
-              height: 100vh;
-              backdrop-filter: blur(1.5px);
-          }*/
-  
-          
-          .form form{
-            display: flex;
-            margin: 20px auto;
-            width: 40%;
-            flex-direction: column;
-            height: 100%;
-            padding: 50px;
-            box-shadow: 0px 0px 10px #000;
-          }
     
-          .form form input{
-            margin: 20px 0px;
-            height: 50px;
-            border: 0;
-            outline: none;
-            border-bottom: 1px solid rgb(122,117,117);
-            font-size: 20px;
-          }
-    
-          .form form input:focus{
-            border-bottom: 2px solid var(--secondary-color);
-          }
-    
-          .form form .label{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-          }
-    
-          .form form .label label{
-            width: 60%;
-            color: var(--secondary-color);
-          }
-    
-          .form form .label input{
-            width: 40%;
-            cursor: pointer;
-          }
-    
-          .form form button{
-            height: 50px;
-            font-size: 20px;
-            padding: 10px;
-            margin: 30px auto;
-            width: 150px;
-            cursor: pointer;
-            border: 0;
-            outline: none;
-            border-radius: 30px;
-            background-color: #fff;
-            color: var(--secondary-color);
-            font-weight: 400;
-            transition: 0.3s ease-in-out;
-            position: relative;
-            box-shadow: 6px 6px 1px -1px rgba(0, 0, 0, 0.15),
-                        -6px -6px 10px -1px rgba(255, 255, 255, 0.7);        
-          }
-    
-          form button:hover{
-                color: #fff;
-                box-shadow: 6px 6px 1px -1px rgba(72,68,163,0.2),
-                            -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
-                z-index: 2;
-            }
-        
-            form button:hover::before{
-                content: '';
-                height: 100%;
-                position: absolute;
-                width: 100%;
-                left: 0px;
-                top: 0px;
-                background-color: var(--secondary-color);
-                color: #fff;
-                animation: btn 0.3s linear forwards;
-                border-radius: 30px;
-                opacity: 1;
-                z-index: -2;
-            }
-        
-            @keyframes btn{
-                0%{
-                    width: 0%;
-                }
-                50%{
-                    width: 50%;
-                }
-                100%{
-                    width: 100%;
-                }
-            }
-    
-            .fa-solid.fa-wand-magic-sparkles{
-              margin-left: 5px;
-            }
-        
-            .form-title{
-              width: 125%;
-              text-align: center;
-              height: 60px;
-              background-color: var(--secondary-color);
-              margin-left: -12.5%;
-              margin-top: -30px;
-              padding: 20px;
-              color: #fff;
-              box-shadow: 0px 0px 10px var(--secondary-color);
-            }
-    
-            @media (max-width: 1000px){
-              .form form{
-                width: 60%;
-              }
-            }
-    
-            @media (max-width: 700px){
-              .form form{
-                width: 80%;
-              }
-
-              .nav1{
-                display: none;
-              }
-            }
-
-    </style> -->
-    <!-- <style>
-      .title{
-        margin: 50px 0px;
-        text-align: center;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .title h3{
-        text-align: center;
-        color: var(--secondary-color);
-        font-size: 30px;
-        width: 40%;
-        line-height: 40px;
-      }
-
-      .form{
-        display: flex;
-        width: 100%;
-        align-items: center;
-        justify-content: center;
-        min-height: 40vh;
-      }
-
-      .form form{
-        display: flex;
-        width: 60%;
-        justify-content: space-around;
-        align-items: center;
-        border: 1px solid black;
-        padding: 20px;
-      }
-
-      .input{
-        border-right: 1px solid gray;
-      }
-    </style> -->
     <style>
       /*body {
         display: flex;
@@ -204,6 +24,18 @@
       .body{
         min-height: 65vh;
         padding-bottom: 20px;
+      }
+
+      .username{
+        display: flex;
+        flex-direction: row-reverse;
+        padding-right: 30px;
+      }
+
+      .username h5{
+        text-align: left;
+        font-size: 18px;
+        color: var(--secondary-color);
       }
 
       .title{
@@ -649,6 +481,12 @@
       </ul>
   </div>
 
+  {% if user.is_authenticated %}
+    <div class="username">
+      <h5>Hello {{user.username}}</h5>
+    </div>
+  {% endif %}
+
       <div class="body">
         <div class="title">
           <h3>Welcome to IIT Indore Hostels & Guest-House Bookings</h3>
@@ -675,10 +513,11 @@
                   <input type="number" id="rooms" name="capacity" placeholder="Rooms" min="1" max="20" required>
                 </div>
                 <div class="input-container" class="norooms">
-                  <label for="room-type"><i class="fa-solid fa-hotel"></i> Room type</label>
-                  <select name="room_type" id="room-type">
-                    <option value="1">Type-1</option>
-                    <option value="2">Type-2</option>
+                  <label for="category"><i class="fa-solid fa-hotel"></i> Category</label>
+                  <select name="category" id="category">
+                    <option value="1">Alumni of IITI Indore, Parents of Students.</option>
+                    <option value="2">Students, Faculty, Staff of CFTIs and Govt. Organizations.</option>
+                    <option value="3">None of the above.</option>
                   </select>            
                 </div>
               <!-- </div> -->

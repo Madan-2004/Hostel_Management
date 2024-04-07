@@ -11,7 +11,7 @@ def get_current_date():
 
 @register.simple_tag(name="max_date")
 def get_current_date():
-    max = (date.today()+timedelta(days=30)).isoformat()  
+    max = (date.today()+timedelta(days=60)).isoformat()  
     return max
 
 @register.simple_tag(name="tomorrow")

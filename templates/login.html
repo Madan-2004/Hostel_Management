@@ -763,6 +763,7 @@
             <form action="{% url 'login' %}" method="post" id="login">
                 {% csrf_token %}
                 <h3>Login</h3>
+                <a href="{% url 'admin_login' %}">Login as Admin</a>
                 <!-- <div class="gmail">
                     <button>Login using Institue Email id</button>
                 </div> -->

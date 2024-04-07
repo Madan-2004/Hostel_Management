@@ -10,286 +10,227 @@
     <title>Book Room</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <!-- <style>
-        *{
-            margin: 0;
-            padding: 0;
-                }
-        body{
-            background-position: center;
-            background-size: auto;
-            }
-        #form{
-            background-color: black;
-            height:700px;
-            width:550px;
-            margin: auto;
-            margin-top: 100px;
-            opacity:0.7;
-            display: flex; /* Enable flexbox layout */
-            justify-content: center; /* Center elements horizontally */
-            align-items: center; 
+    <style>
+      .container {
+        width: 60%;
+        margin: 20px auto;
+        padding: 20px;
+      }
+      
+      /* Form Styles */
+      .form-group {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      }
+      
+      #form h1 {
+        color: var(--secondary-color);
+        margin-bottom: 30px;
+        text-align: center;
+        font-size: 25px;
+      }
+      
+      #group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      
+      .content {
+        position: relative;
+        margin-bottom: 20px;
+      }
+      
+      .content i {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        color: var(--secondary-color);
+      }
+      
+      .input-group {
+        width: 100%;
+        padding: 15px 40px;
+        border: 1px solid rgba(108, 99, 255, 0.1);
+        border-radius: 25px;
+        font-size: 16px;
+        background-color: rgba(99, 130, 255, 0.1);
+        color: #7e7e7e;
+        cursor: pointer;
+      }
+      
+      .input-group:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 10px rgba(103, 156, 231, 0.3);
+      }
+      
+      /*#submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(to right, var(--secondary-color), rgb(117, 97, 231));
+        color: #fff;
+        border: none;
+        border-radius: 25px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+      
+      #submit-btn:hover {
+        background: linear-gradient(to right, #5a51ff, #9689f7);
+      }*/
+
+      .btn {
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 16px;
+        text-decoration: none;
+        width: 80px;
+        height: 60px;
+        background: var(--secondary-color);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        border: 0;
+        border-radius: 75px;
+        cursor: pointer;
+        transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+        transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+      }
+      .btn span {
+        color: transparent;
+        transition: all 100ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+        transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+      }
+      .btn:before {
+        content:'';
+        position: absolute;
+        width: 3px;
+        height: 15px;
+        background: white;
+        transform: rotate(45deg);
+        top: 27px;
+        transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+        transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+      }
+      .btn:after {
+        content:'';
+        position: absolute;
+        width: 3px;
+        height: 15px;
+        background: white;
+        transform: rotate(-45deg);
+        bottom: 27px;
+        transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+        transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+      }
+      
+      /*--Button Hover Styles--*/
+      .btn:hover {
+        width: 225px;
+        transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+        transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+      }
+      .btn:hover span {
+        color: white;
+        margin-left: -20px;
+        transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+        transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+      }
+      .btn:hover:before, .btn:hover:after {
+        right: 45px;
+        transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+        transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+      }
+      
+      /*--Button Active Styles--*/
+      .btn:active, .btn:focus  {
+        width: 100px;
+        background: green;
+        outline: none;
+        transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
+        transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
+      }
+      
+      .btn:active span, .btn:focus span {
+        color: transparent;
+      }
+      
+      .btn:active:before, .btn:focus:before {
+        transform: rotate(45deg);
+        top: 28px;
+        height: 25px;
+        margin: auto;
+        right: -10px;
+        left: 0;
+      }
+      
+      .btn:active:after, .btn:focus:after {
+        height: 14px;
+        transform: rotate(-45deg);
+        margin: auto;
+        right: 0;
+        left: -17px;
+      }
+
+      .username{
+        display: flex;
+        flex-direction: row-reverse;
+        padding-right: 30px;
+      }
+
+      .username h5{
+        text-align: left;
+        font-size: 18px;
+        color: var(--secondary-color);
+      }
+      
+      /* Media Queries */
+      @media (max-width: 900px){
+        .container{
+          width: 80%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .container{
+          width: 95%;
+        }
+      }
+
+      @media (max-width: 600px){
+        .container{
+          width: 70%;
         }
         #group{
-            border:none;
-            width:400px;
-            margin-top: 18px;
-            position: absolute;
+          grid-template-columns: 1fr;
+          gap: 5px;
         }
-        #content{
-            border: 1px solid #fff;
-            margin:10px;
-            margin-left: 8px;
-            padding:5px;
-        }
-        #content #input-group{
-            border:none;
-            outline:none;
-            background: transparent;
-            margin-left:8px;
-            width:300px;
-            color:#fff;
-        }
-        ::placeholder{
-            color:#fff;
-        }
-        .fa{
-            display:inline-block;
-            color: rgb(34, 122, 191);
-            border-right:1px solid #fff;
-            padding:8px;
-            margin-left: 8px;
-        }
-        #second-group{
-            border:none;
-            width:400px;
-            margin-top: 55px;
-            margin-left:400px;
-        }
-        #submit-btn{
-            margin-top: 30px;
-            margin-left: 100px;
-            background: transparent;
-            color:#fff;
-            width:100px;
-            border:1px solid rgb(34, 122, 191);
-            outline:none;
-            padding:5px;
-            font-size: 15px;
-        }
-    </style> -->
-         
-    <style>
-        /* General Styles */
-  /* Container Styles */
-  .container {
-    width: 60%;
-    margin: 20px auto;
-    padding: 20px;
-  }
-  
-  /* Form Styles */
-  .form-group {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  #form h1 {
-    color: var(--secondary-color);
-    margin-bottom: 30px;
-    text-align: center;
-    font-size: 25px;
-  }
-  
-  #group {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-  
-  .content {
-    position: relative;
-    margin-bottom: 20px;
-  }
-  
-  .content i {
-    position: absolute;
-    top: 50%;
-    left: 15px;
-    transform: translateY(-50%);
-    color: var(--secondary-color);
-  }
-  
-  .input-group {
-    width: 100%;
-    padding: 15px 40px;
-    border: 1px solid rgba(108, 99, 255, 0.1);
-    border-radius: 25px;
-    font-size: 16px;
-    background-color: rgba(99, 130, 255, 0.1);
-    color: #7e7e7e;
-    cursor: pointer;
-  }
-  
-  .input-group:focus {
-    outline: none;
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 10px rgba(103, 156, 231, 0.3);
-  }
-  
-  /*#submit-btn {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(to right, var(--secondary-color), rgb(117, 97, 231));
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  #submit-btn:hover {
-    background: linear-gradient(to right, #5a51ff, #9689f7);
-  }*/
+      }
 
-  .btn {
-    font-family: 'Ubuntu', sans-serif;
-    font-size: 16px;
-    text-decoration: none;
-    width: 80px;
-    height: 60px;
-    background: var(--secondary-color);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    border: 0;
-    border-radius: 75px;
-    cursor: pointer;
-    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
-    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
-  }
-  .btn span {
-    color: transparent;
-    transition: all 100ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
-    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
-  }
-  .btn:before {
-    content:'';
-    position: absolute;
-    width: 3px;
-    height: 15px;
-    background: white;
-    transform: rotate(45deg);
-    top: 27px;
-    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
-    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
-  }
-  .btn:after {
-    content:'';
-    position: absolute;
-    width: 3px;
-    height: 15px;
-    background: white;
-    transform: rotate(-45deg);
-    bottom: 27px;
-    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
-    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
-  }
-  
-  /*--Button Hover Styles--*/
-  .btn:hover {
-    width: 225px;
-    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
-    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
-  }
-  .btn:hover span {
-    color: white;
-    margin-left: -20px;
-    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
-    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
-  }
-  .btn:hover:before, .btn:hover:after {
-    right: 45px;
-    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
-    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
-  }
-  
-  /*--Button Active Styles--*/
-  .btn:active, .btn:focus  {
-    width: 100px;
-    background: green;
-    outline: none;
-    transition: all 500ms cubic-bezier(0.565, -0.070, 0.140, 1.135);
-    transition-timing-function: cubic-bezier(0.565, -0.070, 0.140, 1.135);
-  }
-  
-  .btn:active span, .btn:focus span {
-    color: transparent;
-  }
-  
-  .btn:active:before, .btn:focus:before {
-    transform: rotate(45deg);
-    top: 28px;
-    height: 25px;
-    margin: auto;
-    right: -10px;
-    left: 0;
-  }
-  
-  .btn:active:after, .btn:focus:after {
-    height: 14px;
-    transform: rotate(-45deg);
-    margin: auto;
-    right: 0;
-    left: -17px;
-  }
-  
-  /* Media Queries */
-  @media (max-width: 900px){
-    .container{
-      width: 80%;
-    }
-  }
+      @media (max-width: 465px){
+        .container{
+          width: 80%;
+        }
+      }
 
-  @media (max-width: 768px) {
-    .container{
-      width: 95%;
-    }
-  }
+      @media (max-width: 365px){
+        .container{
+          width: 95%;
+        }
+      }
 
-  @media (max-width: 600px){
-    .container{
-      width: 70%;
-    }
-    #group{
-      grid-template-columns: 1fr;
-      gap: 5px;
-    }
-  }
-
-  @media (max-width: 465px){
-    .container{
-      width: 80%;
-    }
-  }
-
-  @media (max-width: 365px){
-    .container{
-      width: 95%;
-    }
-  }
-
-  @media (max-width: 300px){
-    .container{
-      width: 100%;
-    }
-  }
+      @media (max-width: 300px){
+        .container{
+          width: 100%;
+        }
+      }
     </style>
 </head>
 <body>
@@ -341,7 +282,13 @@
           </ul>
       </div>
 
-      <div class="container">
+      {% if user.is_authenticated %}
+        <div class="username">
+          <h5>Hello {{user.username}}</h5>
+        </div>
+      {% endif %}
+
+    <div class="container">
         <form class="form-group" action="/book_room/" method="POST">
           {% csrf_token %}
             <div id="form">
@@ -361,7 +308,7 @@
                     </div>
                     <div class="content">
                       <i class="fa-solid fa-right-to-bracket"></i>
-                            <input type="date" class="input-group" value="{{check_in}}" name="checkin" disabled>
+                      <input type="date" class="input-group" value="{{check_in}}" name="checkin" disabled>
                     </div>
                     <div class="content">
                       <i class="fa-solid fa-right-from-bracket"></i>
@@ -373,14 +320,24 @@
                         <input type="number" class="input-group" placeholder="{{capacity}}" name="cap" disabled>
                     </div>
                         <div class="content">
-                          <i class="fa-solid fa-hotel"></i>
-                            <select class="input-group" value="{{category}}" name="cat" style="color:#000;" disabled>
-                                <option value="1">Type-1</option>
-                                <option value="2">Type-2</option>
-            
-                            </select>
+                          <i class="fa-solid fa-coins"></i>
+                          <input type="number" class="input-group" placeholder="&#8377; {{price}}" name="cap" disabled>
                         </div>
-                        <!-- <button type="submit" value="Submit" id="submit-btn">Pay And Book Now</button> -->
+                        <div class="content">
+                          <i class="fa-solid fa-credit-card"></i>
+                          <select class="input-group" id="payment-method" name="payment_method">
+                              <option value="1">Payment by Self</option>
+                              <option value="2">Payment through Project</option>
+                          </select>
+                        </div>
+                        <div class="content" id="project-email-field" style="display: none;">
+                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                            <input type="email" id="project-email" class="input-group" placeholder="Project Email ID" name="project_email">
+                        </div>
+                        <div class="content" id="project_description_field" style="display: none;">
+                          <i class="fa-solid fa-file-lines"></i>
+                          <input type="text" id="project_description" class="input-group" name="project_description" placeholder="Project Description">
+                        </div>
                         <button type="submit" value="Submit" class="btn" id="submit-btn"><span>Book Now</span></button>
                 </div>
             </div>
@@ -422,23 +379,25 @@
             return; // Exit the function if fields are not filled
           }
           else{
-            alert('Your booking has been made. Pay to confirm booking!'); // You can replace this with your actual booking confirmation logic
+            alert('Your request has been made. You will be notified!!'); // You can replace this with your actual booking confirmation logic
           }
       }
   
-      // Function to prompt user for confirmation
-      //function promptConfirmation() {
-        //  if (confirm('Are you sure you want to proceed with the booking?')) {
-              // If user confirms, proceed with booking
-          //    confirmBooking();
-          //} else {
-              // If user cancels, do nothing
-              // You can add additional logic here if needed
-         // }
-      //}
-  
-      // Add event listener to the "Book Now" button
       document.getElementById('submit-btn').addEventListener('click', confirmBooking);
+      // JavaScript code to show/hide email input field based on payment method selection
+      document.getElementById('payment-method').addEventListener('change', function() {
+        var selectedOption = this.value;
+        var projectEmailField = document.getElementById('project-email-field');
+        var projectDescriptionField = document.getElementById('project_description_field');
+        if (selectedOption === '2') {
+            projectEmailField.style.display = 'block';
+            projectDescriptionField.style.display = 'block';
+        } else {
+            projectEmailField.style.display = 'none';
+            projectDescriptionField.style.display = 'none';
+        }
+      });
+
   </script>
 </body>
 </html>

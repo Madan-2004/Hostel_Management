@@ -129,6 +129,10 @@
         margin-left: 20px;
       }
 
+      .left{
+        margin-right: 20px;
+      }
+
       .right h5{
         color: #fff;
         font-size: 20px;
@@ -238,6 +242,17 @@
         border: 1.5px solid var(--secondary-color);
       }
 
+      .username{
+        display: flex;
+        flex-direction: row-reverse;
+        padding-right: 30px;
+      }
+
+      .username h5{
+        text-align: left;
+        font-size: 18px;
+        color: var(--secondary-color);
+      }
       
     </style>
 </head>
@@ -251,7 +266,7 @@
         <div class="headings">
           <a href="/">Home</a>
           <a href="/stays">Stays</a>
-          <a href="/bookings" class="active">Bookings</a>
+          <a href="/bookings" class="active">Your Bookings</a>
         </div>
           
           <div class="nav1-login">
@@ -261,7 +276,7 @@
             <a href='{% url "login" %}'>Login</a>
             {% endif %}
           </div>
-      </div>
+    </div>
   
       <!-- Responsive navbar -->
       <div class="navbar2">
@@ -291,7 +306,13 @@
           </ul>
       </div>
 
-      {% if user_reservations%}
+      {% if user.is_authenticated %}
+        <div class="username">
+          <h5>Hello {{user.username}}</h5>
+        </div>
+      {% endif %}
+
+      {% if user_reservations %}
         {% for reservation in user_reservations %}
         <div class="container">
           <div class="card">
@@ -305,34 +326,43 @@
                     <p><span>Check-In:</span>{{ reservation.check_in_date }}</p>
                     <p><span>Check-Out:</span>{{ reservation.check_out_date }}</p>
                     <p><span>Room no:</span>{{ reservation.room_numbers_list|join:", " }}</p>
-                    <p><span>Room type:</span>{{ reservation.get_room_type_display }}</p>
+                    <p><span>Duration of Stay:</span>{{ reservation.length_of_stay }}</p>
                   </div>
                   <div class="right">
                     <!-- <h5>Contact Details</h5>
                     <p><span>Name:</span>{{ user.username }}</p>
                     <p><span>Email:</span>{{ reservation.email }}</p>
                     <p><span>Phone No:</span>{{ reservation.phone_number }}</p> -->
-                    <p><span>Price:</span>Rs. {{ reservation.price }}</p>
-                    {% if reservation.payment_status == '1' %}
-                      <p><span>Payment status:</span><span style="color: red">{{ reservation.get_payment_status_display }}</span></p>
-                    {% elif reservation.payment_status == '2' %}
-                      <p><span>Payment status:</span><span style="color: green">{{ reservation.get_payment_status_display }}</span></p>
-                    {% else %}
-                      <p><span>Payment status:</span><span style="color: orange">{{ reservation.get_payment_status_display }}</span></p>  
+                    <p><span>Price:</span>Rs. {{ reservation.total_price }}</p>
+                    {% if reservation.verified_status == '1' %}
+                      {% if reservation.payment_status == '1' %}
+                        <p><span>Payment status:</span><span style="color: red">{{ reservation.get_payment_status_display }}</span></p>
+                      {% elif reservation.payment_status == '2' %}
+                        <p><span>Payment status:</span><span style="color: green">{{ reservation.get_payment_status_display }}</span></p>
+                      {% else %}
+                        <p><span>Payment status:</span><span style="color: orange">{{ reservation.get_payment_status_display }}</span></p>  
+                      {% endif %}
+                        <p><span>Verification status:</span><span style="color: green;">{{reservation.get_verified_status_display}}</span></p>
+                    {% elif reservation.verified_status == '3' %}
+                      <p><span>Verification status:</span><span style="color: red">{{reservation.get_verified_status_display}}</span></p>
                     {% endif %}
                   </div>
                 </div>
                 <div class="btn-row">
-                  {% if reservation.payment_status == '2' %}
-                      <a href="{% url 'download_invoice' reservation.id %}" class="btn btn-primary">Download Invoice</a>
-                  {% else %}
-                      {% if reservation.payment_status == '1' %}
-                          <!-- Display pay now button -->
-                      <a href="{% url 'pay_now' reservation.id %}" class="btn btn-primary">Pay Now</a>
-                      {% endif %}
-                      <!-- Display pay later button -->
-                      <a href="#" class="btn btn-secondary">Pay Later</a>
-                      <a href="#" class="btn btn-danger" data-reservation-id="{{ reservation.id }}">Delete Booking</a>
+                  {% if reservation.verified_status == '1' %}
+                    {% if reservation.payment_status == '2' %}
+                        <a href="{% url 'download_invoice' reservation.id %}" class="btn btn-primary">Download Invoice</a>
+                    {% else %}
+                        {% if reservation.payment_status == '1' %}
+                            <!-- Display pay now button -->
+                        <a href="{% url 'pay_now' reservation.id %}" class="btn btn-primary">Pay Now</a>
+                        {% endif %}
+                        <!-- Display pay later button -->
+                        <a href="#" class="btn btn-secondary">Pay Later</a>
+                        <a href="#" class="btn btn-danger" data-reservation-id="{{ reservation.id }}">Delete Booking</a>
+                    {% endif %}
+                  {% elif reservation.verified_status == '3' %}
+                    <a href="#" class="btn btn-danger" data-reservation-id="{{ reservation.id }}">Delete Booking</a>
                   {% endif %}
                 </div>
               </div>

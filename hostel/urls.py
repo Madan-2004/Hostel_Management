@@ -16,5 +16,9 @@ urlpatterns = [
     path('payment_response/', views.payment_response, name='payment_response'),
     path('payment_success/<str:txnid>/', views.payment_success, name='payment_success'),
     path('payment_failure/<str:txnid>/', views.payment_failure, name='payment_failure'),
-    path('download-invoice/<int:reservation_id>/', views.generate_invoice_pdf, name='download_invoice')
+    path('download-invoice/<int:reservation_id>/', views.generate_invoice_pdf, name='download_invoice'),
+
+    path('admin_login/', views.admin_login, name='admin_login'),
+    path('admin_index/', views.admin_index, name='admin_index'),
+    path('admin_requests/', views.admin_requests, name='admin_requests'),
 ]

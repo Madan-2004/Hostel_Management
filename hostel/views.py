@@ -71,8 +71,8 @@ def stays(request):
         check_in = request.POST.get('cin')
         check_out = request.POST.get('cout')
         capacity = int(request.POST.get('capacity'))
-        category = request.POST.get('room_type')
-        room_list = Room.objects.filter(category = category)
+        category = request.POST.get('category')
+        room_list = Room.objects.all()
         available_rooms = []
 
         checkin_date = datetime.strptime(check_in, '%Y-%m-%d').date()
@@ -156,12 +156,23 @@ def book_room(request):
         capacity = stays_data['capacity']
         category = stays_data['category']
         available_room_nos = stays_data['available_room_nos']
-        amount=0
+        payment_method = request.POST.get('payment_method')
+        project_email = request.POST.get('project_email', '')
+        project_description = request.POST.get('project_description', '')
+        amount=0.0
+        room_rent = 0
+        if category == '1':
+            room_rent = 300
+        elif category == '2':
+            room_rent = 350
+        else:
+            room_rent = 400
+        tariff_per_day = room_rent
         user = User.objects.get(username=user_name.username)
         length_of_stay = (datetime.strptime(check_out, "%Y-%m-%d") - datetime.strptime(check_in, "%Y-%m-%d")).days
         for r in available_room_nos:
             room_info = Room.objects.get(room_no = r)
-            amount=amount+(length_of_stay * int(room_info.rent))
+            amount += length_of_stay * int(room_rent)
             new_booking = Booking.objects.create(
                 user = user_name,
                 phone_number = phoneno,
@@ -173,17 +184,28 @@ def book_room(request):
 
             new_booking.save()
 
+        total_price = int(amount) + (0.12*int(amount))
+
         reservation = Reservation.objects.create(
             user=user_name,
             email=email,
             phone_number=phoneno,
+            payment_method=payment_method,
             number_of_rooms=len(available_room_nos),
             check_in_date=check_in,
             check_out_date=check_out,
             room_numbers_list=available_room_nos,
-            price=amount,
-            room_type=category
+            price = amount,   
+            total_price = total_price,
+            length_of_stay = length_of_stay,
+            tariff_per_day = tariff_per_day,
+            gst = float(amount)*0.12
         )
+
+        if payment_method == '2' and project_email:
+            reservation.project_email = project_email
+            reservation.project_description = project_description
+            reservation.save()
 
         reservation.save()
 
@@ -199,12 +221,25 @@ def book_room(request):
     category = stays_data['category']
     available_room_nos = stays_data['available_room_nos']
 
+    amount=0.0
+    room_rent = 0
+    if category == '1':
+        room_rent = 300
+    elif category == '2':
+        room_rent = 350
+    else:
+        room_rent = 400
+
+    length_of_stay = (datetime.strptime(check_out, "%Y-%m-%d") - datetime.strptime(check_in, "%Y-%m-%d")).days
+    for r in available_room_nos:
+        amount += length_of_stay * int(room_rent)
+
     print(request.user)
     return render(request, 'book_room.html', {
         'check_in': check_in,
         'check_out': check_out,
         'capacity': capacity,
-        'category': category,
+        'price': int(amount)+(int(amount)*0.12), #GST.
         'available_room_nos': available_room_nos
     })
 
@@ -240,7 +275,7 @@ def pay_now(request, reservation_id):
     salt = settings.PAYU_CONFIG.get('merchant_salt')
 
     # Set the order details
-    amount = reservation.price
+    amount = reservation.total_price
     productInfo = "IIT Indore"
     firstName = reservation.user.username
     email = reservation.email
@@ -390,6 +425,115 @@ def send_invoice_email(transaction):
     # Create EmailMultiAlternatives object to include both HTML and text content
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
     msg.attach_alternative(html_content, "text/html")
+
+    # Send email
+    msg.send()
+
+
+
+# Admin Login
+from django.contrib.auth.decorators import login_required
+from .decorators import admin_required
+
+def admin_login(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request,username=username,password=password)
+
+        if user is not None and user.is_active:
+            auth_login(request,user)
+            return redirect('admin_index')
+        else:
+            messages.error(request,'Invalid Credentials')
+    return render(request, "admin/admin_login.html")
+
+@login_required
+@admin_required(['madan'])
+def admin_index(request):
+
+    return render(request, 'admin/admin_index.html')
+
+@login_required
+@admin_required(['madan'])
+def admin_requests(request):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        reservation_id = request.POST.get('reservation_id')
+        reservation = Reservation.objects.get(id=reservation_id)
+
+        if action == 'accept':
+            reservation.verified_status = '1'  # Assuming '1' represents 'Accepted'
+            reservation.save()
+            send_booking_confirmation_email(reservation)
+            # Check if payment method is through project
+            payment_method = reservation.payment_method
+            if payment_method == '2':
+                send_project_payment_email(reservation)
+
+        elif action == 'reject':
+            delete_booking(request, reservation_id)
+            send_booking_rejection_email(reservation)
+
+        else:
+            return HttpResponseBadRequest("Invalid action")
+    unverified_reservations = Reservation.objects.filter(verified_status='3')
+    quantity = len(unverified_reservations)
+    print(quantity)  # For debugging purposes
+    
+    return render(request, 'admin/admin_requests.html', {'quantity': quantity, 'unverified_reservations': unverified_reservations})
+
+def send_project_payment_email(reservation):
+    subject = 'Confirmation for room bookings'
+    from_email = settings.EMAIL_HOST_USER
+    to_email = reservation.project_email
+
+    # Render HTML content from template
+    html_content = render_to_string('email/project_payment_confirmation.html', {'reservation': reservation})
+
+    # Create a text/plain version of the HTML email (for clients that do not support HTML emails)
+    text_content = strip_tags(html_content)
+
+    # Create EmailMultiAlternatives object to include both HTML and text content
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+    msg.attach_alternative(html_content, "text/html")
+
+    # Send email
+    msg.send()
+
+def send_booking_confirmation_email(reservation):
+    subject = 'Booking Request Confirmation'
+    from_email = settings.EMAIL_HOST_USER
+    to_email = reservation.email
+
+    # Render HTML content from template
+    html_content = render_to_string('email/booking_confirmation_email.html', {'reservation': reservation})
+
+    # Create a text/plain version of the HTML email (for clients that do not support HTML emails)
+    text_content = strip_tags(html_content)
+
+    # Create EmailMultiAlternatives object to include both HTML and text content
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+    msg.attach_alternative(text_content, "text/plain")  # Attach plain text version of the email
+
+    # Send email
+    msg.send()
+
+def send_booking_rejection_email(reservation):
+    subject = 'Booking Request Rejection'
+    from_email = settings.EMAIL_HOST_USER
+    to_email = reservation.email
+
+    # Render HTML content from template
+    html_content = render_to_string('email/booking_rejection_email.html', {'reservation': reservation})
+
+    # Create a text/plain version of the HTML email (for clients that do not support HTML emails)
+    text_content = strip_tags(html_content)
+
+    # Create EmailMultiAlternatives object to include both HTML and text content
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+    msg.attach_alternative(text_content, "text/plain")  # Attach plain text version of the email
 
     # Send email
     msg.send()

@@ -1,90 +1,213 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice</title>
+    <title>IIT Indore Receipt</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Edu+SA+Beginner:wght@400;500;600;700&family=Lato:wght@300;400&family=Poppins:wght@300;400;500;600;700&family=Ubuntu:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-        *{
+        body {
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Ubuntu', sans-serif;
-            font-weight: 400;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        :root{
-            --main-color: #fff;
-            --secondary-color: rgb(34,122,191);
-            --primary-color: #000;
-        }
-        /* Define your CSS styles for the invoice here */
-
-        h3{
-            color: var(--secondary-color);
-            text-align: center;
-        }
-
-        .invoice-container {
-            width: 80%;
-            margin: 0 auto;
+        .container {
+            max-width: 800px;
+            width: 100%;
             padding: 20px;
         }
-        .invoice-header {
+
+        .receipt-box {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        header {
             text-align: center;
             margin-bottom: 20px;
         }
-        .invoice-details {
+
+        header img {
+            max-width: 150px;
+        }
+
+        header h1, header h2 {
+            margin: 5px 0;
+        }
+
+        header p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        main {
             margin-bottom: 20px;
         }
-        .invoice-table {
+
+        .receipt-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
         }
-        .invoice-table th, .invoice-table td {
-            border: 1px solid var(--secondary-color);
+
+        th, td {
             padding: 8px;
             text-align: left;
+            border-bottom: 1px solid #ddd;
         }
-        .invoice-total {
+
+        footer {
             text-align: right;
-            margin-top: 20px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="invoice-container">
-        <div class="invoice-header">
-            <h2>Invoice</h2>
-        </div>
-        <div class="invoice-details">
-            <h3>Reservation Details</h3>
-            <p><strong>Reservation ID:</strong> {{ reservation.id }}</p>
-            <p><strong>User:</strong> {{ reservation.user.username }}</p>
-            <p><strong>Email:</strong> {{ reservation.email }}</p>
-            <p><strong>Phone Number:</strong> {{ reservation.phone_number }}</p>
-            <p><strong>Number of Rooms:</strong> {{ reservation.number_of_rooms }}</p>
-            <p><strong>Check-in Date:</strong> {{ reservation.check_in_date }}</p>
-            <p><strong>Check-out Date:</strong> {{ reservation.check_out_date }}</p>
-            <p><strong>Room Type:</strong> {{ reservation.get_room_type_display }}</p>
-            <p><strong>Room Numbers:</strong> {{ reservation.room_numbers_list }}</p>
-            <p><strong>Price:</strong> {{ reservation.price }}</p>
-        </div>
-        <div class="invoice-details">
-            <h3>Transaction Details</h3>
-            <p><strong>Transaction ID:</strong> {{ transaction.txnid }}</p>
-            <p><strong>Net Amount Debit:</strong> {{ transaction.net_amount_debit }}</p>
-            <p><strong>Phone:</strong> {{ transaction.phone }}</p>
-            <p><strong>Product Info:</strong> {{ transaction.productinfo }}</p>
-            <p><strong>Status:</strong> {{ transaction.status }}</p>
-            <p><strong>First Name:</strong> {{ transaction.firstname }}</p>
-            <p><strong>Added On:</strong> {{ transaction.addedon }}</p>
-            <p><strong>PayU Money ID:</strong> {{ transaction.payuMoneyId }}</p>
-            <p><strong>MIH Pay ID:</strong> {{ transaction.mihpayid }}</p>
+    <div class="container">
+        <div class="receipt-box">
+            <header>
+                <img src="{% static 'IITI_Logo.png' %}" >
+                <h1>भारतीय प्रौद्योगिकी संस्थान,इंदौर</h1>
+                <h2>Indian Institute of Technology, Indore</h2>
+                <p>Khandwa Road, Simrol, Indore - 453552 (MP), India Phone: 731-6603447</p>
+                <p>Email: office.vsb@iiti.ac.in</p>
+            </header>
+            <main>
+                <div class="receipt-header">
+                    <p>Receipt No. <span> getReceiptNumber({{transaction.addedon}}) </span>  / {{reservation.id}}</p>
+                    <p>Date: <span id="formattedDate"></span></p>
+                </div>
+                <h3>TO WHOM IT MAY CONCERN</h3>
+                <p>Your accommodation charges are Rs. {{transaction.net_amount_debit}}/- (INR <span id="totalAmountInWords1"></span> Only). Regarding HJB/VSB Hostel Guest House accommodation charges, please see the details below.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Guest Name</th>
+                            <th>Room No.</th>
+                            <th>Duration</th>
+                            <th>No. of Night/Day</th>
+                            <th>Tariff per Night/Day</th>
+                            <th>GST (12%)</th>
+                            <th>Total Amount Rs.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>01</td>
+                            <td>Mr/Mrs. {{transaction.firstname}}</td>
+                            <td>{{ reservation.room_numbers_list|join:", " }}</td>
+                            <td>{{ reservation.check_in_date }} - {{reservation.check_out_date}}</td>
+                            <td>{{ reservation.length_of_stay }}</td>
+                            <td>{{ reservation.tariff_per_day }}</td>
+                            <td>{{ reservation.gst }}</td>
+                            <td>{{ reservation.total_price }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">INR <span id="totalAmountInWords2"></span> Only &nbsp;&nbsp;&nbsp;&nbsp; Total Amount {{reservation.total_price}}/- &nbsp;&nbsp;&nbsp;&nbsp; Tr.no {{ transaction.txnid }} &nbsp;&nbsp;&nbsp;&nbsp; IIT INDORE GST. No. 23AAAAI7115H1Z2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" id="totalPrice" value="{{ reservation.total_price }}">
+            </main>
+            <footer>
+                <p>Authorized signatory</p>
+            </footer>
         </div>
     </div>
+
+    <script>
+        // Function to format the date
+        function formatTransactionDate(dateString) {
+            const date = new Date(dateString);
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const month = months[date.getMonth()];
+            const day = date.getDate();
+            const year = date.getFullYear();
+            return `${month} ${day}, ${year}`;
+        }
+    
+        // Fetch transaction date from the server or wherever it is stored
+        const transactionDate = "{{ transaction.addedon|date:'Y-m-d' }}"; // Assuming it's in ISO format like "2024-03-15T08:00:00Z"
+    
+        // Format the transaction date
+        const formattedDate = formatTransactionDate(transactionDate);
+    
+        // Display the formatted date in the HTML page
+        document.getElementById('formattedDate').innerText = formattedDate;
+    
+        // Function to get the Receipt number with year and month
+        function getReceiptNumber(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = date.toLocaleString('default', { month: 'short' }).toUpperCase();
+            return `${year} / VSB / ${month}`;
+        }
+    
+        // Get the Receipt number with year and month and display it in the HTML page
+        const receiptNumber = getReceiptNumber(transactionDate);
+        document.getElementById('receiptNumber').innerText = receiptNumber;
+    
+        // Function to convert number to words
+        function convertNumberToWords(number) {
+            const units = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+            const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+            const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    
+            if (number === 0) {
+                return 'Zero';
+            }
+    
+            if (number < 10) {
+                return units[number];
+            }
+    
+            if (number < 20) {
+                return teens[number - 10];
+            }
+    
+            if (number < 100) {
+                return tens[Math.floor(number / 10)] + ' ' + units[number % 10];
+            }
+    
+            if (number < 1000) {
+                return units[Math.floor(number / 100)] + ' Hundred ' + convertNumberToWords(number % 100);
+            }
+    
+            return convertNumberToWords(Math.floor(number / 1000)) + ' Thousand ' + convertNumberToWords(number % 1000);
+        }
+    
+        // Fetch total price from the server or wherever it is stored
+        const totalPrice = document.getElementById('totalPrice').value;
+    
+        // Convert total price to words
+        const totalAmountInWords = convertNumberToWords(totalPrice);
+    
+        // Display total amount in words in the HTML page
+        document.getElementById('totalAmountInWords1').innerText = totalAmountInWords + " Rupees Only";
+        document.getElementById('totalAmountInWords2').innerText = totalAmountInWords + " Rupees Only";
+    </script>
+    
 </body>
 </html>

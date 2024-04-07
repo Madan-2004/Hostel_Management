@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Payment Confirmation</title>
+</head>
+<body>
+    <p>Dear Sir/Madam,</p>
+    
+    <p>     {{reservation.user.username}} has made a request for booking {{reservation.number_of_rooms}} rooms for {{reservation.project_description}}.</p>
+    
+    <h3>Reservation Details:</h3>
+    <p><strong>User:</strong> {{ reservation.user.username }}</p>
+    <p><strong>Number of Rooms:</strong> {{ reservation.number_of_rooms }}</p>
+    <p><strong>Check-in Date:</strong> {{ reservation.check_in_date }}</p>
+    <p><strong>Check-out Date:</strong> {{ reservation.check_out_date }}</p>
+    <p>Please accept the request, so that the booking can be confirmed in the link given below.</p>
+    <a href="#">confirm Request!</a>
+    <!-- Add more reservation details here as needed -->
+    
+    <p>If you have any questions or concerns, please feel free to contact us.</p>
+    
+    <p>Thank you for choosing our service!</p>
+    
+    <p>Sincerely,<br>Admin Team</p>
+</body>
+</html>

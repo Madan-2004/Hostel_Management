@@ -1,0 +1,14 @@
+    <h3>Dear {{ reservation.user.username }},</h3>
+    <p>   Your booking request has been confirmed. Here are the details:</p>
+    <ul>
+        <li>Reservation ID: {{ reservation.id }}</li>
+        <li>Check-in Date: {{ reservation.check_in_date }}</li>
+        <li>Check-out Date: {{ reservation.check_out_date }}</li>
+        <li>Number of Rooms: {{ reservation.number_of_rooms }}</li>
+        <li>Total Price: {{ reservation.total_price }}</li>
+    </ul>
+    <p>Please pay now to confirm your reservation.</p>
+    <a href="#">Pay Now!</a>
+    <p>Thank you for choosing our service. If you have any questions, feel free to contact us.</p><br><br>
+    <p>Best regards,</p>
+    <p>The Admin Team</p>

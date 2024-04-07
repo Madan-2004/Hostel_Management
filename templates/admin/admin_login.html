@@ -1,0 +1,587 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <title>Admin Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@400..700&family=Edu+SA+Beginner:wght@400;500;600;700&family=Lato:wght@300;400&family=Poppins:wght@300;400;500;600;700&family=Ubuntu:wght@300;400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Protest+Revolution&display=swap');
+            
+            div#main-body{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                padding: 5% 10%;
+            }
+    
+            div#main-body #body-1{
+                width: 50%;
+                height: 100%;
+            }
+    
+            div#main-body #body-2{
+                width: 50%;
+                height: 100%;
+            }
+    
+            form#register{
+                display: none;
+                text-align: center;
+            }
+      
+            form#login{
+                display: flex;
+                text-align: center;
+            }
+    
+            form#login, form#register{
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                padding: 30px;
+                min-height: 80vh;
+            }
+    
+            .main form#login h3, .main form#register h3{
+                font-family: "Protest Revolution", cursive;
+                font-weight: 900;
+                font-size: 30px;
+                margin-bottom: 30px;
+            }
+    
+            div.email, div.password{
+                position: relative;
+                width: 70%;
+                margin-bottom: 20px;
+            }
+    
+            div.email input, div.password input{
+                width: 100%;
+                height: 35px;
+                font-size: 18px;
+                padding: 10px;
+                margin-top: 15px;
+                background: transparent;
+                border: none;
+                border-bottom: 1.5px solid rgba(0,0,0,0.3);
+                outline: none;
+                color: #000;
+            }
+    
+            div.email input:focus, div.password input:focus{
+              border-bottom: 1.5px solid var(--secondary-color);
+              transform: translateY(-2px);
+            }
+    
+            div.email input::placeholder, div.password input::placeholder{
+                color: rgba(0,0,0,0.5);
+            }
+    
+            div.email i, div.password i{
+                position: absolute;
+                bottom: 10px;
+                right: 15px;
+                color: rgba(0,0,0,0.3);
+                cursor: pointer;
+                transition: 0.3s all ease-in-out;
+            }
+      
+            div.email i:hover, div.password i:hover{
+                color: var(--secondary-color);
+                text-shadow: 0px 0px 10px var(--secondary-color);
+            }
+      
+            input[type="checkbox"]{
+                accent-color: var(--secondary-color);
+                cursor: pointer;
+            }
+    
+            form#login div.forget{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 70%;
+                margin-bottom: 20px;
+            }
+    
+            form#login div.forget p{
+                color: rgba(0,0,0,0.7);
+                font-size: 15px;
+            }
+    
+            form#login div.forget a{
+                text-decoration: none;
+                font-size: 15px;
+                color: rgba(0,0,0,0.7);
+                transition: 0.3s all ease-in-out;
+            }
+    
+            form#login div.forget a:hover{
+                color: var(--secondary-color);
+            }
+    
+            form#login button.submit, form#register button.submit{
+                height: 40px;
+                font-size: 15px;
+                padding: 10px;
+                outline: none;
+                width: 32%;
+                border-radius: 30px;
+                cursor: pointer;
+                border: none;
+                background: rgba(0,0,0,0.5);
+                color: #fff;
+                margin: 20px auto;
+                position: relative;
+            }
+    
+            form#login button.submit:hover, form#register button.submit:hover{
+                background-color: var(--secondary-color);
+            }
+    
+            form#login p, form#register p{
+                color: #000;
+                font-size: 15px;
+            }
+    
+            form#login p a, form#register p a{
+                color: #000;
+                transition: 0.3s all ease-in-out;
+            }
+    
+            form#login p a:hover, form#register p a:hover{
+                color: var(--secondary-color);
+            }
+    
+            .login-with-google-btn{
+                transition: background-color .3s, box-shadow .3s; 
+                padding: 12px 16px 12px 42px;
+                border: none;
+                border-radius: 30px;
+                box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 1px 1px rgba(0, 0, 0, .25);
+                color: rgba(0,0,0,0.5);
+                font-size: 18px;
+                font-weight: 500;
+                font-family: "Ubuntu";
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWNUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQgNS40IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=);
+                background-color: white;
+                background-repeat: no-repeat;
+                background-position: 15px;
+                width: 50%;
+                margin: 20px;
+                cursor: pointer;
+                text-decoration: none;
+            }
+                
+                .login-with-google-btn:hover {
+                  box-shadow: 0 -1px 0 rgba(0, 0, 0, .04), 0 2px 4px rgba(0, 0, 0, .25);
+                  color: var(--secondary-color);
+                }
+                
+                .login-with-google-btn:active{
+                  background-color: #eeeeee;
+                }
+                
+                .login-with-google-btn :focus{
+                  outline: none;
+                  box-shadow: 
+                    0 -1px 0 rgba(0, 0, 0, .04),
+                    0 2px 4px rgba(0, 0, 0, .25),
+                    0 0 0 3px #c8dafc;
+                }  
+    
+                .carousel{
+                    margin-left: 0%;
+                    margin-right: 0%;
+                }
+                
+                ul.slides {
+                    display: block;
+                    position: relative;
+                    height: 500px;
+                    margin: 0;
+                    padding: 0;
+                    overflow: hidden;
+                    list-style: none;
+                }
+                
+                .slides * {
+                    user-select: none;
+                    -ms-user-select: none;
+                    -moz-user-select: none;
+                    -khtml-user-select: none;
+                    -webkit-user-select: none;
+                    -webkit-touch-callout: none;
+                }
+                
+                ul.slides input {
+                    display: none; 
+                }
+                
+                
+                .slide-container { 
+                    display: block; 
+                }
+                
+                .slide-image {
+                    display: block;
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    opacity: 0;
+                    transition: all .7s ease-in-out;
+                }   
+                
+                .slide-image img {
+                    width: auto;
+                    min-width: 100%;
+                    height: 100%;
+                }
+                
+                .carousel-controls {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    z-index: 999;
+                    font-size: 100px;
+                    line-height: 600px;
+                    color: #fff;
+                }
+                
+                .carousel-controls label {
+                    display: none;
+                    position: absolute;
+                    padding: 0 20px;
+                    opacity: 0;
+                    transition: opacity .2s;
+                    cursor: pointer;
+                }
+                
+                .slide-image:hover + .carousel-controls label{
+                    opacity: 0.5;
+                }
+                
+                .carousel-controls label:hover {
+                    opacity: 1;
+                }
+                
+                .carousel-controls .prev-slide {
+                    width: 49%;
+                    text-align: left;
+                    left: 0;
+                }
+                
+                .carousel-controls .next-slide {
+                    width: 49%;
+                    text-align: right;
+                    right: 0;
+                }
+                
+                .carousel-dots {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 20px;
+                    z-index: 999;
+                    text-align: center;
+                }
+                
+                .carousel-dots .carousel-dot {
+                    display: inline-block;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    background-color: #fff;
+                    opacity: 0.5;
+                    margin: 10px;
+                }
+                
+                input:checked + .slide-container .slide-image {
+                    opacity: 1;
+                    transform: scale(1);
+                    transition: opacity 1s ease-in-out;
+                }
+                
+                input:checked + .slide-container .carousel-controls label {
+                     display: block; 
+                }
+                
+                input#img-1:checked ~ .carousel-dots label#img-dot-1,
+                input#img-2:checked ~ .carousel-dots label#img-dot-2,
+                input#img-3:checked ~ .carousel-dots label#img-dot-3,
+                input#img-4:checked ~ .carousel-dots label#img-dot-4,
+                input#img-5:checked ~ .carousel-dots label#img-dot-5,
+                input#img-6:checked ~ .carousel-dots label#img-dot-6 {
+                    opacity: 1;
+                }
+                
+                
+                input:checked + .slide-container .nav label { display: block; }
+    
+                p.or{
+                  position: relative;
+                }
+    
+                p.or:after{
+                  content: '';
+                  background-color: gray;
+                  width: 500%;
+                  position: absolute;
+                  left: 125%;
+                  top: 60%;
+                  height: 1px;
+                }
+    
+                p.or:before{
+                  content: '';
+                  background-color: gray;
+                  width: 500%;
+                  position: absolute;
+                  right: 125%;
+                  top: 60%;
+                  height: 1px;
+                }
+                
+            @media (max-width: 1050px){
+                div#main-body{
+                    padding: 20px;
+                }
+    
+                div#main-body #body-1{
+                    width: 40%;
+                    height: 100%;
+                }
+        
+                div#main-body #body-2{
+                    width: 60%;
+                    height: 100%;
+                }
+            }
+    
+            @media (max-width: 800px){
+                div#main-body{
+                    padding: 5%;
+                }
+    
+                div#main-body #body-1{
+                    display: none;
+                }
+        
+                div#main-body #body-2{
+                    width: 100%;
+                    height: 100%;
+                }
+    
+                div.email, div.password{
+                    width: 70%;
+                }
+    
+                form#login div.forget{
+                    width: 70%;
+                }
+    
+                .login-with-google-btn{
+                    width: 40%;
+                }
+            }
+    
+            @media (max-width: 600px){
+                div#main-body{
+                    padding: 0% 10%;
+                }
+    
+                div#main-body #body-1{
+                    display: none;
+                }
+        
+                div#main-body #body-2{
+                    width: 100%;
+                    height: 100%;
+                }
+    
+                div.email, div.password{
+                    width: 100%;
+                }
+    
+                form#login div.forget{
+                    width: 100%;
+                }
+    
+                .login-with-google-btn{
+                    width: 70%;
+                }
+            }
+                
+        </style>
+</head>
+<body>
+    <div class="nav1">
+        <div>
+          <h3>IIT Indore</h3>
+        </div>
+  
+        <div class="headings">
+          <a href="{% url 'admin_index' %}">Home</a>
+          <a href="{% url 'admin_requests' %}">Requests</a>
+        </div>
+          
+          <div class="nav1-login">
+              {% if user.is_authenticated %}
+              <a href='{% url "logout" %}'>Logout</a>
+              {% else %}
+              <a href='{% url "login" %}'>Login</a>
+              {% endif %}
+          </div>
+    </div>
+  
+      <!-- Responsive navbar -->
+    <div class="navbar2">
+          <div class="ham">
+            <p><i class="fa-solid fa-bars"></i></p>
+          </div>
+          <div class="title">
+            <a href="/" class="lo">
+              <img src="" class="logo">
+              <h3>IIT Indore</h3>
+            </a>
+        </div>
+    </div>
+    <div class="side-bar">
+          <div id="close"><i class="fa-solid fa-xmark"></i></div>
+          <ul>
+              <li><a href="{% url 'admin_index' %}" class="active">Home</a></li>
+              <a href="{% url 'admin_requests' %}">Requests</a>
+              <li><div class="nav1-login">
+                {% if user.is_authenticated %}
+                <a href='{% url "logout" %}'>Logout</a>
+                {% else %}
+                <a href='{% url "login" %}'>Login</a>
+                {% endif %}
+              </div></li>
+          </ul>
+    </div>
+    <div id="main-body">
+        
+        <div id="body-1">
+            <div class="carousel">
+              <ul class="slides">
+                <input type="radio" name="radio-buttons" id="img-1" checked />
+                <li class="slide-container">
+                  <div class="slide-image">
+                    <img src="{% static 'back.jpg' %}">
+                  </div>
+                  <div class="carousel-controls">
+                    <label for="img-3" class="prev-slide">
+                      <span>&lsaquo;</span>
+                    </label>
+                    <label for="img-2" class="next-slide">
+                      <span>&rsaquo;</span>
+                    </label>
+                  </div>
+                </li>
+                <input type="radio" name="radio-buttons" id="img-2" />
+                <li class="slide-container">
+                  <div class="slide-image">
+                    <img src="{% static 'h1.jpg' %}">
+                  </div>
+                  <div class="carousel-controls">
+                    <label for="img-1" class="prev-slide">
+                      <span>&lsaquo;</span>
+                    </label>
+                    <label for="img-3" class="next-slide">
+                      <span>&rsaquo;</span>
+                    </label>
+                  </div>
+                </li>
+                <input type="radio" name="radio-buttons" id="img-3" />
+                <li class="slide-container">
+                  <div class="slide-image">
+                    <img src="{% static 'hostel.jpg' %}">
+                  </div>
+                  <div class="carousel-controls">
+                    <label for="img-2" class="prev-slide">
+                      <span>&lsaquo;</span>
+                    </label>
+                    <label for="img-1" class="next-slide">
+                      <span>&rsaquo;</span>
+                    </label>
+                  </div>
+                </li>
+                <div class="carousel-dots">
+                  <label for="img-1" class="carousel-dot" id="img-dot-1"></label>
+                  <label for="img-2" class="carousel-dot" id="img-dot-2"></label>
+                  <label for="img-3" class="carousel-dot" id="img-dot-3"></label>
+                </div>
+              </ul>
+            </div>
+          </div>
+    
+    <div class="main" id="body-2">
+        <form action="{% url 'admin_login' %}" method="post" id="login">
+            {% csrf_token %}
+            <h3>Login</h3>
+            <!-- <a href="{% url 'login' %}">Login as Student</a> -->
+            <!-- <div class="gmail">
+                <button>Login using Institue Email id</button>
+            </div> -->
+            <div class="email"><input type="text" placeholder="User Name" id="user-name" name="username"><i class="fa-solid fa-envelope"></i></div>
+            <div class="password"><input type="password" id="pass" placeholder="Password" name="password" autocomplete="new-password"><span onclick="toggleShow()"><i class="fa-solid fa-lock"></i></span></div>
+            <div class="forget">
+                <p><input type="checkbox"> Remember me</p>
+                <p><a href="">Forgot Password?</a></p>
+            </div>
+            <button type="submit" class="submit">Sign in</button>
+        </form>
+    </div>
+    </div>
+<footer>
+    <div class="footer">
+      <div class="info">
+        <h4>IIT Indore</h4>
+      </div>
+      <div class="social">
+        <ul>
+          <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+          <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+          <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+        </ul>
+      </div>
+      <div class="rights">
+        <p><i class="fa-solid fa-copyright"></i> Copyrights reserved.</p>
+      </div>
+    </div>
+    
+</footer>
+
+<script src="{% static 'script.js' %}"></script>
+<script>
+    var password = document.querySelector(".password input#pass");
+        var newpass = document.querySelector(".password input#newpass");
+        var retypepass = document.querySelector(".password input#retypepass");
+        var span = document.querySelector(".password span");
+        var news = document.querySelector(".password span.new");
+        var retype = document.querySelector(".password span.retype");
+        function toggleShow(){
+            if(password.type === "password") {
+                password.setAttribute('type', 'text');
+                span.innerHTML = "<i class='fa-solid fa-lock-open'></i>";
+                span.style.color = "#fff";
+            }
+            else{
+                password.setAttribute('type','password') ;
+                span.innerHTML = "<i class='fa-solid fa-lock'></i>";
+                span.style.color = "var(--secondary-color)";
+            }
+        }
+</script>
+</body>
+</html>

@@ -31,6 +31,18 @@
         animation: img 0.5s linear forwards;
       }
 
+      .username{
+        display: flex;
+        flex-direction: row-reverse;
+        padding-right: 30px;
+      }
+
+      .username h5{
+        text-align: left;
+        font-size: 18px;
+        color: var(--secondary-color);
+      }
+
       @keyframes img{
         0%{
           opacity: 0;
@@ -217,6 +229,12 @@
             </div></li>
         </ul>
     </div>
+
+    {% if user.is_authenticated %}
+      <div class="username">
+        <h5>Hello {{user.username}}</h5>
+      </div>
+    {% endif %}
 
     <div class="body">
       <div class="d1">
