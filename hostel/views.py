@@ -67,6 +67,8 @@ def login(request):
 
 @login_required(login_url='/login/')
 def stays(request):
+    print("here")
+    print(request.user.email)
     if request.method == 'POST':
         check_in = request.POST.get('cin')
         check_out = request.POST.get('cout')
@@ -101,6 +103,8 @@ def stays(request):
         else:
             rem = capacity - len(available_rooms)
             return redirect('not_available', rem)
+    
+    print(request.user.email)
 
     return render(request, "stays.html")
 
