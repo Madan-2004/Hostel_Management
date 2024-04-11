@@ -65,6 +65,7 @@ AUTHENTICATION_BACKENDS = [
 
     # allauth specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
+    
 ]
 
 
@@ -102,16 +103,26 @@ TEMPLATES = [
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
         'APP': {
             'client_id': os.environ.get('client_id'),
             'secret': os.environ.get('secret'),
             'key': ''
-        }
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+
+    }    
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        
     }
-}
+    
 
 LOGIN_REDIRECT_URL = '/stays/'
 

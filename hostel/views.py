@@ -2,7 +2,8 @@ from django.shortcuts import render ,redirect
 from django.http import JsonResponse
 from django.http import HttpResponse , HttpResponseRedirect, HttpResponseBadRequest
 from .models import Room, Booking, Reservation, Transaction
-from django.db.models import Count, Value
+from allauth.socialaccount.models import SocialAccount
+
 from django.db import models
 # from .models import Hotels,Rooms,Reservation
 from django.contrib import messages
@@ -29,6 +30,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from paywix.payu import Payu
 from hashlib import sha512
+from django.contrib.auth.models import User
+from allauth.socialaccount.models import SocialAccount
 # import uuid
 
 # Retrieve the failure URL from settings
@@ -49,6 +52,32 @@ class BookingList(ListView):
 
 # Create your views here.
 def index(request):
+    if request.user.is_authenticated:
+        try:
+            social_account = SocialAccount.objects.get(user=request.user)
+            extra_data = social_account.extra_data
+            
+            # Extract username and email from extra_data
+            username = extra_data.get('name', '')
+            email = extra_data.get('email', '')
+            
+            # You can process or display the username and email as needed
+            context = {
+                'username': username,
+                'email': email,
+            }
+            return render(request, 'index.html', context)
+        
+        except SocialAccount.DoesNotExist:
+            # Handle the case when the user doesn't have a social account
+            # For example, you can use the user's username and email from the default Django user model
+            username = request.user.username
+            email = request.user.email
+            context = {
+                'username': username,
+                'email': email,
+            }
+            return render(request, 'index.html', context)
     return render(request, 'index.html')
 
 def login(request):
@@ -67,8 +96,6 @@ def login(request):
 
 @login_required(login_url='/login/')
 def stays(request):
-    print("here")
-    print(request.user.email)
     if request.method == 'POST':
         check_in = request.POST.get('cin')
         check_out = request.POST.get('cout')
@@ -104,7 +131,6 @@ def stays(request):
             rem = capacity - len(available_rooms)
             return redirect('not_available', rem)
     
-    print(request.user.email)
 
     return render(request, "stays.html")
 
@@ -115,9 +141,11 @@ def not_available(request, rem):
 
 @login_required(login_url='/login/')
 def bookings(request):
-    user_reservations = Reservation.objects.filter(user=request.user)
+    email = SocialAccount.objects.get(user=request.user).extra_data.get('email', '')
+    user_reservations = Reservation.objects.filter(email = email)
+    project_reservations = Reservation.objects.filter(project_email = email,  verified_status = '1')
 
-    return render(request, "bookings.html", {'user_reservations': user_reservations})
+    return render(request, "bookings.html", {'user_reservations': user_reservations, 'project_reservations': project_reservations})
 
 def signup(request):
     if request.method == "POST":
@@ -148,12 +176,18 @@ def signup(request):
 
 def book_room(request):
     stays_data = request.session.get('stays_data')
-    user_name = None
+    user_name = request.user
+    email = None
+
     if request.user.is_authenticated:
-        user_name = request.user
+        social_account = SocialAccount.objects.get(user=request.user)
+        extra_data = social_account.extra_data
+            
+        # Extract username and email from extra_data
+        email = extra_data.get('email', '')
 
     if request.method == 'POST':
-        email = request.POST['email']
+        email = SocialAccount.objects.get(user=request.user).extra_data.get('email', '')
         phoneno = request.POST['phoneno']
         check_in = stays_data['check_in']
         check_out = stays_data['check_out']
@@ -238,13 +272,13 @@ def book_room(request):
     for r in available_room_nos:
         amount += length_of_stay * int(room_rent)
 
-    print(request.user)
     return render(request, 'book_room.html', {
         'check_in': check_in,
         'check_out': check_out,
         'capacity': capacity,
         'price': int(amount)+(int(amount)*0.12), #GST.
-        'available_room_nos': available_room_nos
+        'available_room_nos': available_room_nos,
+        'email': email
     })
 
 
@@ -448,7 +482,7 @@ def admin_login(request):
 
         if user is not None and user.is_active:
             auth_login(request,user)
-            return redirect('admin_index')
+            return redirect('admin_requests')
         else:
             messages.error(request,'Invalid Credentials')
     return render(request, "admin/admin_login.html")
@@ -456,8 +490,9 @@ def admin_login(request):
 @login_required
 @admin_required(['madan'])
 def admin_index(request):
+    reservations = Reservation.objects.all()
 
-    return render(request, 'admin/admin_index.html')
+    return render(request, 'admin/admin_index.html', {'reservations': reservations})
 
 @login_required
 @admin_required(['madan'])
@@ -484,9 +519,51 @@ def admin_requests(request):
             return HttpResponseBadRequest("Invalid action")
     unverified_reservations = Reservation.objects.filter(verified_status='3')
     quantity = len(unverified_reservations)
-    print(quantity)  # For debugging purposes
     
     return render(request, 'admin/admin_requests.html', {'quantity': quantity, 'unverified_reservations': unverified_reservations})
+
+@login_required
+@admin_required(['madan'])
+def view_reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, id=reservation_id)
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        reservation_id = request.POST.get('reservation_id')
+        reservation = Reservation.objects.get(id=reservation_id)
+
+        if action == 'accept':
+            reservation.verified_status = '1'  # Assuming '1' represents 'Accepted'
+            reservation.save()
+            send_booking_confirmation_email(reservation)
+            # Check if payment method is through project
+            payment_method = reservation.payment_method
+            if payment_method == '2':
+                send_project_payment_email(reservation)
+                return redirect('admin_index')
+
+        elif action == 'reject':
+            delete_booking(request, reservation_id)
+            send_booking_rejection_email(reservation)
+            return redirect('admin_index')
+
+        else:
+            return HttpResponseBadRequest("Invalid action")
+    return render(request, 'admin/view_reservation.html', {'reservation': reservation})
+
+from .forms import ReservationForm
+
+@login_required
+@admin_required(['madan'])
+def edit_reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, id=reservation_id)
+    if request.method == 'POST':
+        form = ReservationForm(request.POST, instance=reservation)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_index')  # Redirect to the admin home page
+    else:
+        form = ReservationForm(instance=reservation)
+    return render(request, 'admin/edit_reservation.html', {'form': form, 'reservation': reservation})
 
 def send_project_payment_email(reservation):
     subject = 'Confirmation for room bookings'
@@ -541,3 +618,6 @@ def send_booking_rejection_email(reservation):
 
     # Send email
     msg.send()
+
+
+

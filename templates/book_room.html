@@ -11,6 +11,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Set minimum height to viewport height */
+      }
+
+      .container {
+          flex-grow: 1; /* Allow container to grow to fill remaining space */
+      }
+
+      footer {
+          margin-top: auto; /* Push footer to bottom */
+      }
+      
       .container {
         width: 60%;
         margin: 20px auto;
@@ -300,7 +314,7 @@
                     </div>
                     <div class="content">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        <input type="email" id="email" class="input-group" placeholder="Email ID" name="email" required>
+                        <input type="email" id="email" class="input-group" name="email" value="{{email}}" disabled>
                     </div>
                     <div class="content">
                         <i class="fa fa-phone" aria-hidden="true"></i>
@@ -371,11 +385,10 @@
       function confirmBooking() {
           // Here you can perform any additional actions, like submitting the form
           // For now, let's just alert a message
-          var email = document.getElementById('email').value.trim();
           var phone = document.getElementById('phone').value.trim();
 
-          if (email === '' || phone === '') {
-            alert('Please fill out both email and phone number fields.');
+          if (phone === '') {
+            alert('Please fill out phone number field.');
             return; // Exit the function if fields are not filled
           }
           else{

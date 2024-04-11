@@ -21,4 +21,6 @@ urlpatterns = [
     path('admin_login/', views.admin_login, name='admin_login'),
     path('admin_index/', views.admin_index, name='admin_index'),
     path('admin_requests/', views.admin_requests, name='admin_requests'),
+    path('view_reservation/<int:reservation_id>/', views.view_reservation, name='view_reservation'),
+    path('edit_reservation/<int:reservation_id>/', views.edit_reservation, name='edit_reservation'),
 ]

@@ -16,214 +16,19 @@
         box-sizing: border-box;
         font-family: "Poppins", sans-serif;
       }
-
-      body .container .card {
-        position: relative;
-        width: 50%;
-        min-height: 350px;
-        /*box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.2),
-          inset -5px -5px 15px rgba(255, 255, 255, 0.1),
-          5px 5px 15px rgba(0, 0, 0, 0.3), -5px -5px 15px rgba(255, 255, 255, 0.1);
-        */
-        border-radius: 15px;
-        margin: 30px auto;
-        transition: 0.5s;
-      }
-
-      body .container .card:nth-child(odd) .box .content a {
-        background: #2196f3;
-      }
-
-      body .container .card:nth-child(even) .box .content a {
-        background: #e91e63;
-      }
-
-      body .container .card:nth-child(3) .box .content a {
-        background: #23c186;
-      }
-
-      body .container .card .box {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        right: 20px;
-        bottom: 20px;
-        background: rgba(34,122,191,0.7);
-        border-radius: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        transition: 0.5s;
-      }
-
-      body .container .card .box:hover {
-        transform: translateY(-10px);
-      }
-
-      body .container .card .box:before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 50%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.03);
-        z-index: -3;
-      }
-
-      body .container .card .box .content {
-        padding: 20px;
-        text-align: center;
-      }
-
-      body .container .card .box .content h2 {
-        position: absolute;
-        top: -10px;
-        right: 30px;
-        font-size: 8rem;
-        color: rgba(255, 255, 255, 0.1);
-      }
-
-      body .container .card .box .content h3 {
-        font-size: 1.8rem;
-        color: #fff;
-        z-index: 1;
-        transition: 0.5s;
-        margin-bottom: 15px;
-      }
-
-      body .container .card .box .content p {
-        font-size: 1rem;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.9);
-        z-index: 1;
-        transition: 0.5s;
-      }
-
-      body .container .card .box .content a {
-        position: relative;
-        padding: 8px 20px;
-        display: inline-block;
-        background: black;
-        border-radius: 5px;
-        text-decoration: none;
-        color: white;
-        margin-top: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        transition: 0.5s;
-      }
-      body .container .card .box .content a:hover {
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
-        background: #fff;
-        color: #000;
-      }
-
-      .columns{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-      }
-
-      .btn-row button{
-        margin-right: 20px;
-        margin-left: 20px;
-        cursor: pointer;
-      }
-
-      .btn-row{
-        margin-top: 10px;
-        padding-top: 10px;
-      }
-
-      .btn-row button.btn{
-        width: 100px;
-        height: 40px;
-        font-size: 16px;
-        padding: 5px;
-        outline: none;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        background: rgb(33,150,243);
-        color: #fff;
-        transition: ease-in-out;
-      }
-
-      .btn.accept:hover{
-        background-color: #69ee4e;
-      }
-
-      .btn.reject:hover{
-        background-color: #e91e63;
-      }
       
-      .left{
-        padding: 10px;
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Set minimum height to viewport height */
       }
 
-      .right{
-        padding: 10px;
+      .container {
+          flex-grow: 1; /* Allow container to grow to fill remaining space */
       }
 
-      .left h5{
-        color: #fff;
-        font-size: 20px;
-      }
-
-      .columns p{
-        text-align: left;
-      }
-
-      .columns p span{
-        margin-right: 10px;
-        color: #000;
-      }
-
-      @media (max-width: 1020px){
-        body .container .card{
-          width: 60%;
-        }
-      }
-
-      @media (max-width: 870px){
-        body .container .card{
-          width: 70%;
-        }
-      }
-
-      @media (max-width: 720px){
-        body .container .card{
-          width: 80%;
-        }
-      }
-
-      @media (max-width: 630px){
-        body .container .card{
-          width: 90%;
-          min-height: 400px;
-        }
-      }
-
-      @media (max-width: 580px){
-        .columns{
-          display: block;
-          margin: auto;
-        }
-      }
-
-      @media (max-width: 440px){
-        body .container .card{
-          min-height: 500px;
-        }
-      }
-
-      @media (max-width: 330px){
-        body .container .card{
-          min-height: 550px;
-          width: 100%;
-        }
+      footer {
+          margin-top: auto; /* Push footer to bottom */
       }
 
       .username{
@@ -249,6 +54,88 @@
 
       .headings p span{
         color: var(--secondary-color);
+      }
+
+      /* Table Styles */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+      }
+      th, td {
+        border: 1px solid var(--secondary-color);
+        padding: 8px;
+        text-align: center;
+      }
+      thead th {
+        background-color: var(--secondary-color);
+        color: #fff;
+        border: 1px solid #fff;
+      }
+      th, tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      td form{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+      .overflow{
+        width: 80%;
+        padding: 10px;
+        overflow-x: scroll;
+        margin: auto;
+      }
+      /* Button Styles */
+      .btn{
+        width: 100px;
+        height: 40px;
+        font-size: 16px;
+        margin-right: 10px;
+        padding: 5px;
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background: rgb(33,150,243);
+        color: #fff;
+        transition: ease-in-out;
+      }
+
+      a.btn{
+        padding: 8px 20px;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      a.btn:hover{
+        background-color: orange;
+      }
+
+      .btn.accept:hover{
+        background-color: #69ee4e;
+      }
+
+      .btn.reject:hover{
+        background-color: #e91e63;
+      }
+
+      /* Style scrollbar */
+      /* Webkit (Safari, Chrome) */
+      ::-webkit-scrollbar {
+          width: 10px;
+      }
+      
+      ::-webkit-scrollbar-track {
+          background: rgba(0,0,0,0.2); 
+      }
+      
+      ::-webkit-scrollbar-thumb {
+          background: var(--secondary-color); 
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+          background: var(--secondary-color); 
       }
     </style>
 </head>
@@ -288,7 +175,7 @@
           <div id="close"><i class="fa-solid fa-xmark"></i></div>
           <ul>
               <li><a href="{% url 'admin_index' %}">Home</a></li>
-              <a href="{% url 'admin_requests' %}" class="active">Requests</a>
+              <li><a href="{% url 'admin_requests' %}" class="active">Requests</a></li>
               <li><div class="nav1-login">
                 {% if user.is_authenticated %}
                 <a href='{% url "logout" %}'>Logout</a>
@@ -303,48 +190,43 @@
       <p>Number of Pending Requests: <span>{{ quantity }}</span></p>
     </div>
 
-    {% for reservation in unverified_reservations %}
-    <div class="container">
-      <div class="card">
-        <div class="box">
-          <div class="content">
-            <h2>{{ forloop.counter }}</h2>
-            <h3>Booking Info</h3>
-            <div class="columns">
-              <div class="left">
-                <p><span>Name:</span>{{ user.username }}</p>
-                <p><span>Email:</span>{{ reservation.email }}</p>
-                <p><span>Phone No:</span>{{ reservation.phone_number }}</p>
-                <p><span>Price:</span>Rs. {{ reservation.total_price }}</p>
-                <p><span>Payment Method:</span>{{ reservation.get_payment_method_display }}</p>
-                {% if reservation.payment_method == '2' %}
-                <p><span>Project Mail:</span>{{ reservation.project_email }}</p>
-                {% endif %}
-              </div>
-              <div class="right">
-                <p><span>Number of Rooms:</span>{{ reservation.number_of_rooms }}</p>
-                <p><span>Check-In:</span>{{ reservation.check_in_date }}</p>
-                <p><span>Check-Out:</span>{{ reservation.check_out_date }}</p>
-                <p><span>Duration of Stay:</span>{{ reservation.length_of_stay }}</p>
-                <p><span>Room no:</span>{{ reservation.room_numbers_list|join:", " }}</p>
-              </div>
-            </div>
-            <div class="btn-row">
-              <form method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn accept" name="action" value="accept" onclick="return confirmAction()">Accept</button>
-                <button type="submit" class="btn reject" name="action" value="reject" onclick="return confirmAction()">Reject</button>
-                <!-- Hidden input to include reservation ID -->
-                <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
-              </form>
-            </div>
-          </div>
-        </div>
+      <div class="overflow">
+        <table>
+          <thead>
+            <tr>
+              <th>Index</th>
+              <th>Email</th>
+              <th>No of Rooms</th>
+              <th>Check-In Date</th>
+              <th>Check-Out Date</th>
+              <th>Duration of Stay</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for reservation in unverified_reservations %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ reservation.email }}</td>
+                <td>{{ reservation.number_of_rooms }}</td>
+                <td>{{ reservation.check_in_date }}</td>
+                <td>{{ reservation.check_out_date }}</td>
+                <td>{{ reservation.length_of_stay }}</td>
+                <td>
+                  <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn accept" name="action" value="accept" onclick="return confirmAction()">Accept</button>
+                    <button type="submit" class="btn reject" name="action" value="reject" onclick="return confirmAction()">Reject</button>
+                    <a href="{% url 'view_reservation' reservation.id %}" class="btn view">View</a>
+                    <!-- Hidden input to include reservation ID -->
+                    <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-    </div>
-        
-    {% endfor %}
-
     <footer>
         <div class="footer">
           <div class="info">

@@ -21,8 +21,21 @@
         font-size: 16px;
       }*/
 
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Set minimum height to viewport height */
+      }
+
+      .container {
+          flex-grow: 1; /* Allow container to grow to fill remaining space */
+      }
+
+      footer {
+          margin-top: auto; /* Push footer to bottom */
+      }
+
       .body{
-        min-height: 65vh;
         padding-bottom: 20px;
       }
 

@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <title>Admin Home</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;800&display=swap");
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Set minimum height to viewport height */
+      }
+
+      .container {
+          flex-grow: 1; /* Allow container to grow to fill remaining space */
+      }
+
+      footer {
+          margin-top: auto; /* Push footer to bottom */
+      }
+
+      .username{
+        display: flex;
+        flex-direction: row-reverse;
+        padding-right: 30px;
+      }
+
+      .username h5{
+        text-align: left;
+        font-size: 18px;
+        color: var(--secondary-color);
+      }
+
+      .headings{
+        text-align: center;
+        color: var(--secondary-color);
+      }
+
+      .container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: auto;
+        padding: 20px;
+      }
+
+      .container h3{
+        margin-bottom: 10px;
+        font-size: 20px;
+      }
+
+      .container p{
+        margin-top: 10px;
+      }
+
+      .container p span{
+        color: var(--secondary-color);
+        margin-right: 10px;
+      }
+
+      .content{
+        border: 1.5px solid var(--secondary-color);
+        max-width: 400px;
+        margin-bottom: 20px;
+        overflow-y: auto;
+        padding: 20px;
+        height: 75vh;
+      }
+
+      .btn-row{
+        margin-top: 20px;
+      }
+
+      /* Button Styles */
+      .btn{
+        width: 100px;
+        height: 40px;
+        font-size: 16px;
+        margin-right: 10px;
+        padding: 5px;
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background: rgb(33,150,243);
+        color: #fff;
+        transition: ease-in-out;
+      }
+
+      .btn.accept:hover{
+        background-color: #69ee4e;
+      }
+
+      .btn.reject:hover{
+        background-color: #e91e63;
+      }
+
+      /* Style scrollbar */
+      /* Webkit (Safari, Chrome) */
+      ::-webkit-scrollbar {
+        width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: rgba(0,0,0,0.2); 
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--secondary-color); 
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--secondary-color); 
+    }
+    </style>
+</head>
+<body>
+    <div class="nav1">
+        <div>
+          <h3>IIT Indore</h3>
+        </div>
+  
+        <div class="headings">
+          <a href="{% url 'admin_index' %}">Home</a>
+          <a href="{% url 'admin_requests' %}">Requests</a>
+          <a href="" class="active">View</a>
+        </div>
+          
+          <div class="nav1-login">
+              {% if user.is_authenticated %}
+              <a href='{% url "logout" %}'>Logout</a>
+              {% else %}
+              <a href='{% url "login" %}'>Login</a>
+              {% endif %}
+          </div>
+    </div>
+  
+      <!-- Responsive navbar -->
+    <div class="navbar2">
+          <div class="ham">
+            <p><i class="fa-solid fa-bars"></i></p>
+          </div>
+          <div class="title">
+            <a href="/" class="lo">
+              <img src="" class="logo">
+              <h3>IIT Indore</h3>
+            </a>
+        </div>
+    </div>
+    <div class="side-bar">
+          <div id="close"><i class="fa-solid fa-xmark"></i></div>
+          <ul>
+              <li><a href="{% url 'admin_index' %}">Home</a></li>
+              <li><a href="{% url 'admin_requests' %}">Requests</a></li>
+              <li><a href="#" class="active">View</a></li>
+              <li><div class="nav1-login">
+                {% if user.is_authenticated %}
+                <a href='{% url "logout" %}'>Logout</a>
+                {% else %}
+                <a href='{% url "login" %}'>Login</a>
+                {% endif %}
+              </div></li>
+          </ul>
+    </div>
+
+    <div class="headings">
+    <h1>Reservation Details</h1>
+    </div>
+
+    <div class="container">
+        <h3>Booking Info</h3>
+        <div class="content">
+            <p><span>Name:</span>{{ reservation.user.username }}</p>
+            <p><span>Email:</span>{{ reservation.email }}</p>
+            <p><span>Phone No:</span>{{ reservation.phone_number }}</p>
+            <p><span>Price:</span>Rs. {{ reservation.total_price }}</p>
+            <p><span>Payment Method:</span>{{ reservation.get_payment_method_display }}</p>
+            {% if reservation.payment_method == '2' %}
+            <p><span>Project Mail:</span>{{ reservation.project_email }}</p>
+            <p><span>Project Description:</span>{{ reservation.project_description }}</p>
+            {% endif %}
+            <p><span>Number of Rooms:</span>{{ reservation.number_of_rooms }}</p>
+            <p><span>Check-In:</span>{{ reservation.check_in_date }}</p>
+            <p><span>Check-Out:</span>{{ reservation.check_out_date }}</p>
+            <p><span>Duration of Stay:</span>{{ reservation.length_of_stay }}</p>
+            <p><span>Room no:</span>{{ reservation.room_numbers_list|join:", " }}</p>
+            {% if reservation.verified_status == '1' %}
+              <p><span>Verification status:</span>{{ reservation.get_verified_status_display }}</p>
+              <p><span>Payment status:</span>{{ reservation.get_payment_status_display }}</p>
+            {% endif %}
+            {% if reservation.verified_status != '1' %}
+          <div class="btn-row">
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn accept" name="action" value="accept" onclick="return confirmAction()">Accept</button>
+              <button type="submit" class="btn reject" name="action" value="reject" onclick="return confirmAction()">Reject</button>
+              <!-- Hidden input to include reservation ID -->
+              <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
+            </form>
+          </div>
+        {% endif %}
+        </div>
+        
+    </div>
+
+<footer>
+    <div class="footer">
+      <div class="info">
+        <h4>IIT Indore</h4>
+      </div>
+      <div class="social">
+        <ul>
+          <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+          <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+          <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+          <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+        </ul>
+      </div>
+      <div class="rights">
+        <p><i class="fa-solid fa-copyright"></i> Copyrights reserved.</p>
+      </div>
+    </div>
+    
+</footer>
+
+<script src="{% static 'script.js' %}"></script>
+
+<script>
+  function confirmAction() {
+    return confirm("Are you sure you want to proceed?");
+  }
+</script>
+</body>
+</html>
+

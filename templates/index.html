@@ -210,7 +210,7 @@
       </div> -->
       <div class="name">
         {% if user.is_authenticated %}
-        <p>Hello {{user.username}}</p>
+        <p>Hello {{username}}</p>
         {% endif %}
       </div>
     </div>
@@ -232,7 +232,8 @@
 
     {% if user.is_authenticated %}
       <div class="username">
-        <h5>Hello {{user.username}}</h5>
+        <h5>Hello {{username}}</h5>
+        <h5>{{email}}</h5>
       </div>
     {% endif %}
 

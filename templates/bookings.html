@@ -17,6 +17,20 @@
         font-family: "Poppins", sans-serif;
       }
 
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Set minimum height to viewport height */
+      }
+
+      .container {
+          flex-grow: 1; /* Allow container to grow to fill remaining space */
+      }
+
+      footer {
+          margin-top: auto; /* Push footer to bottom */
+      }
+
       body .container .card {
         position: relative;
         width: 50%;
@@ -312,7 +326,8 @@
         </div>
       {% endif %}
 
-      {% if user_reservations %}
+      {% if user_reservations or project_reservations %}
+        <!--                User Reservations                 -->
         {% for reservation in user_reservations %}
         <div class="container">
           <div class="card">
@@ -358,11 +373,63 @@
                         <a href="{% url 'pay_now' reservation.id %}" class="btn btn-primary">Pay Now</a>
                         {% endif %}
                         <!-- Display pay later button -->
-                        <a href="#" class="btn btn-secondary">Pay Later</a>
                         <a href="#" class="btn btn-danger" data-reservation-id="{{ reservation.id }}">Delete Booking</a>
                     {% endif %}
                   {% elif reservation.verified_status == '3' %}
                     <a href="#" class="btn btn-danger" data-reservation-id="{{ reservation.id }}">Delete Booking</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+        <!--                Project Reservations              -->
+        {% for reservation in project_reservations %}
+        <div class="container">
+          <div class="card">
+            <div class="box">
+              <div class="content">
+                <h2>{{ forloop.counter }}</h2>
+                <h3>Request Info</h3>
+                <div class="columns">
+                  <div class="left">
+                    <p><span>Number of Rooms:</span>{{ reservation.number_of_rooms }}</p>
+                    <p><span>Check-In:</span>{{ reservation.check_in_date }}</p>
+                    <p><span>Check-Out:</span>{{ reservation.check_out_date }}</p>
+                    <p><span>Room no:</span>{{ reservation.room_numbers_list|join:", " }}</p>
+                    <p><span>Duration of Stay:</span>{{ reservation.length_of_stay }}</p>
+                  </div>
+                  <div class="right">
+                    <h5>Contact Details</h5>
+                    <p><span>Name:</span>{{ user.username }}</p>
+                    <p><span>Email:</span>{{ reservation.email }}</p>
+                    <p><span>Phone No:</span>{{ reservation.phone_number }}</p>
+                    <p><span>Price:</span>Rs. {{ reservation.total_price }}</p>
+                    {% if reservation.verified_status == '1' %}
+                      {% if reservation.payment_status == '1' %}
+                        <p><span>Payment status:</span><span style="color: red">{{ reservation.get_payment_status_display }}</span></p>
+                      {% elif reservation.payment_status == '2' %}
+                        <p><span>Payment status:</span><span style="color: green">{{ reservation.get_payment_status_display }}</span></p>
+                      {% else %}
+                        <p><span>Payment status:</span><span style="color: orange">{{ reservation.get_payment_status_display }}</span></p>  
+                      {% endif %}
+                        <p><span>Verification status:</span><span style="color: green;">{{reservation.get_verified_status_display}}</span></p>
+                    {% elif reservation.verified_status == '3' %}
+                      <p><span>Verification status:</span><span style="color: red">{{reservation.get_verified_status_display}}</span></p>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="btn-row">
+                  {% if reservation.verified_status == '1' %}
+                    {% if reservation.payment_status == '2' %}
+                        <a href="{% url 'download_invoice' reservation.id %}" class="btn btn-primary">Download Invoice</a>
+                    {% else %}
+                        <!-- Display pay now button -->
+                        <a href="" class="btn btn-primary">Accept</a>
+                        <a href="#" class="btn btn-primary">Reject</a>
+                    {% endif %}
                   {% endif %}
                 </div>
               </div>
@@ -400,64 +467,6 @@
     </footer>
 
     <script src="{% static 'script.js' %}"></script>
-    <script>
-      var login = document.querySelector('form#login');
-      var register = document.querySelector('form#register');
-      var clog = document.querySelector('a#clicklog');
-      var creg = document.querySelector('a#clickreg');
-      creg.addEventListener("click", ()=>{
-        login.style.display = 'none';
-        register.style.display = 'flex';
-      });
-       
-      clog.addEventListener("click", ()=>{
-        login.style.display = 'flex';
-        register.style.display = 'none';
-      });
-
-        var password = document.querySelector(".password input#pass");
-        var newpass = document.querySelector(".password input#newpass");
-        var retypepass = document.querySelector(".password input#retypepass");
-        var span = document.querySelector(".password span");
-        var news = document.querySelector(".password span.new");
-        var retype = document.querySelector(".password span.retype");
-        function toggleShow(){
-            if(password.type === "password") {
-                password.setAttribute('type', 'text');
-                span.innerHTML = "<i class='fa-solid fa-lock-open'></i>";
-                span.style.color = "#fff";
-            }
-            else{
-                password.setAttribute('type','password') ;
-                span.innerHTML = "<i class='fa-solid fa-lock'></i>";
-                span.style.color = "var(--secondary-color)";
-            }
-        }
-        function toggleShow1(){
-          if(newpass.type === "password") {
-              newpass.setAttribute('type', 'text');
-              news.innerHTML = "<i class='fa-solid fa-lock-open'></i>";
-              news.style.color = "#fff";
-          }
-          else{
-              newpass.setAttribute('type','password') ;
-              news.innerHTML = "<i class='fa-solid fa-lock'></i>";
-              news.style.color = "var(--secondary-color)";
-          }
-      }
-      function toggleShow2(){
-        if(retypepass.type === "password") {
-            retypepass.setAttribute('type', 'text');
-            retype.innerHTML = "<i class='fa-solid fa-lock-open'></i>";
-            retype.style.color = "#fff";
-        }
-        else{
-            retypepass.setAttribute('type','password') ;
-            retype.innerHTML = "<i class='fa-solid fa-lock'></i>";
-            retype.style.color = "var(--secondary-color)";
-        }
-    }
-    </script>
     <script>
       document.addEventListener("DOMContentLoaded", function() {
         var deleteButtons = document.querySelectorAll('.btn-danger');

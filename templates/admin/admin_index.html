@@ -8,6 +8,166 @@
     <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'navbar.css' %}">
     <title>Admin Home</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;800&display=swap");
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Set minimum height to viewport height */
+      }
+
+      .container {
+          flex-grow: 1; /* Allow container to grow to fill remaining space */
+      }
+
+      footer {
+          margin-top: auto; /* Push footer to bottom */
+      }
+
+      .username{
+        display: flex;
+        flex-direction: row-reverse;
+        padding-right: 30px;
+      }
+
+      .username h5{
+        text-align: left;
+        font-size: 18px;
+        color: var(--secondary-color);
+      }
+
+      .headings{
+        margin-top: 20px;
+        padding: 10px;
+      }
+
+      .headings h1{
+        text-align: center;
+        color: var(--secondary-color);
+      }
+
+      .headings p{
+        text-align: center;
+      }
+
+      .headings p span{
+        color: var(--secondary-color);
+      }
+
+      /* Table Styles */
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+      }
+      th, td {
+        border: 1px solid var(--secondary-color);
+        padding: 8px;
+        text-align: center;
+      }
+      thead th {
+        background-color: var(--secondary-color);
+        color: #fff;
+        border: 1px solid #fff;
+      }
+      th, tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      td form{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+      .overflow{
+        width: 80%;
+        padding: 10px;
+        overflow-x: scroll;
+        margin: auto;
+        margin-bottom: 20px;
+      }
+      /* Button Styles */
+      .btn{
+        width: 100px;
+        height: 40px;
+        font-size: 16px;
+        margin-right: 10px;
+        padding: 5px;
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background: rgb(33,150,243);
+        color: #fff;
+        transition: ease-in-out;
+      }
+
+      a.btn{
+        padding: 8px 20px;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      a.btn.view:hover{
+        background-color: orange;
+      }
+
+      a.btn.edit:hover{
+        background-color: #e91e63;
+      }
+
+      .headings{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .headings select, .headings input{
+        height: 40px;
+        font-size: 16px;
+        color: var(--secondary-color);
+        border: 1.5px solid var(--secondary-color);
+        border-radius: 10px;
+        padding: 5px 10px;
+        outline: none;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+
+      .headings input::placeholder{
+        color: var(--secondary-color);
+      }
+
+      .headings h1{
+        color: var(--secondary-color);
+        margin-bottom: 10px;
+      }
+
+      /* Style scrollbar */
+        /* Webkit (Safari, Chrome) */
+        ::-webkit-scrollbar {
+          width: 10px;
+      }
+      
+      ::-webkit-scrollbar-track {
+          background: rgba(0,0,0,0.2); 
+      }
+      
+      ::-webkit-scrollbar-thumb {
+          background: var(--secondary-color); 
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+          background: var(--secondary-color); 
+      }
+    </style>
 </head>
 <body>
     <div class="nav1">
@@ -45,7 +205,7 @@
           <div id="close"><i class="fa-solid fa-xmark"></i></div>
           <ul>
               <li><a href="{% url 'admin_index' %}" class="active">Home</a></li>
-              <a href="{% url 'admin_requests' %}">Requests</a>
+              <li><a href="{% url 'admin_requests' %}">Requests</a></li>
               <li><div class="nav1-login">
                 {% if user.is_authenticated %}
                 <a href='{% url "logout" %}'>Logout</a>
@@ -55,6 +215,63 @@
               </div></li>
           </ul>
     </div>
+
+    <div class="headings">
+      <h1>Reservations</h1>
+      <div>
+        <input type="text" id="emailSearch" placeholder="Search by Email">
+      </div>
+      <select id="reservationFilter">
+        <option value="all">All Reservations</option>
+        <option value="upcoming">Upcoming Reservations</option>
+        <option value="ongoing">Ongoing Reservations</option>
+        <option value="completed">Completed Reservations</option>
+      </select>
+    </div>
+
+    <div class="overflow">
+      <table>
+        <thead>
+          <tr>
+            <th>Index</th>
+            <th>Email</th>
+            <th>No of Rooms</th>
+            <th>Check-In Date</th>
+            <th>Check-Out Date</th>
+            <th>Duration of Stay</th>
+            <th>Verification Status</th>
+            <th>Payment Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reservation in reservations %}
+            <tr class="reservation-row" data-checkin="{{ reservation.check_in_date }}" data-checkout="{{ reservation.check_out_date }}">
+              <td>{{ forloop.counter }}</td>
+              <td class="reservation-email">{{ reservation.email }}</td>
+              <td>{{ reservation.number_of_rooms }}</td>
+              <td>{{ reservation.check_in_date }}</td>
+              <td>{{ reservation.check_out_date }}</td>
+              <td>{{ reservation.length_of_stay }}</td>
+              <td>{{ reservation.get_verified_status_display }}</td>
+              <td>{{ reservation.get_payment_status_display }}</td>
+              <td>
+                <form method="post">
+                  {% csrf_token %}
+                  <!-- <button type="submit" class="btn accept" name="action" value="accept" onclick="return confirmAction()">Accept</button>
+                  <button type="submit" class="btn reject" name="action" value="reject" onclick="return confirmAction()">Reject</button> -->
+                  <a href="{% url 'view_reservation' reservation.id %}" class="btn view">View</a>
+                  <a href="{% url 'edit_reservation' reservation.id %}" class="btn edit">Edit</a>
+                  <!-- Hidden input to include reservation ID -->
+                  <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
     <footer>
         <div class="footer">
           <div class="info">
@@ -76,5 +293,62 @@
     </footer>
     
     <script src="{% static 'script.js' %}"></script>
+    <script>
+     // Function to filter reservations by email
+      function filterByEmail() {
+        var searchInput = document.getElementById('emailSearch').value.trim().toLowerCase();
+        var reservations = document.querySelectorAll('.reservation-row');
+
+        reservations.forEach(function(reservation) {
+          var email = reservation.querySelector('.reservation-email').textContent.trim().toLowerCase();
+          var checkInDate = new Date(reservation.getAttribute('data-checkin'));
+          var checkOutDate = new Date(reservation.getAttribute('data-checkout'));
+          var currentDate = new Date();
+          var selectedOption = document.getElementById('reservationFilter').value;
+
+          if ((selectedOption === 'all' || 
+              (selectedOption === 'upcoming' && checkInDate > currentDate) ||
+              (selectedOption === 'ongoing' && checkInDate <= currentDate && checkOutDate >= currentDate) ||
+              (selectedOption === 'completed' && checkOutDate < currentDate)) &&
+              email.includes(searchInput)) {
+            reservation.style.display = 'table-row';
+          } else {
+            reservation.style.display = 'none';
+          }
+        });
+      }
+
+      document.getElementById('emailSearch').addEventListener('input', filterByEmail);
+
+      // Function to filter reservations based on selected option
+      function filterReservations() {
+        var filter = document.getElementById('reservationFilter').value;
+        var reservations = document.querySelectorAll('.reservation-row');
+        
+        reservations.forEach(function(reservation) {
+          var checkInDate = new Date(reservation.getAttribute('data-checkin'));
+          var checkOutDate = new Date(reservation.getAttribute('data-checkout'));
+          var currentDate = new Date();
+    
+          if (filter === 'all') {
+            reservation.style.display = 'table-row';
+          } else if (filter === 'upcoming' && checkInDate > currentDate) {
+            reservation.style.display = 'table-row';
+          } else if (filter === 'ongoing' && checkInDate <= currentDate && checkOutDate >= currentDate) {
+            reservation.style.display = 'table-row';
+          } else if (filter === 'completed' && checkOutDate < currentDate) {
+            reservation.style.display = 'table-row';
+          } else {
+            reservation.style.display = 'none';
+          }
+        });
+      }
+    
+      // Attach event listener to the dropdown
+      document.getElementById('reservationFilter').addEventListener('change', filterReservations);
+    
+      // Initial filter call to show all reservations
+      filterReservations();
+    </script>
 </body>
 </html>

@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <title>Edit Reservation</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;800&display=swap");
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Set minimum height to viewport height */
+        }
+
+        .container {
+            flex-grow: 1; /* Allow container to grow to fill remaining space */
+        }
+
+        footer {
+            margin-top: auto; /* Push footer to bottom */
+        }
+
+        /* Style the form container */
+        form {
+            margin: 0 auto;
+            max-width: 400px;
+            padding: 20px;
+            border: 1.5px solid var(--secondary-color);
+        }
+
+
+        /* Style form fields */
+        input[type="text"], input[type="email"], textarea, input[type="number"], select {
+            width: 100%;
+            outline: none;
+            margin-bottom: 20px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            box-sizing: border-box; /* Ensures padding and border are included in the width */
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus, input[type="number"]:focus, select:focus{
+            border: 2px solid var(--secondary-color);
+        }
+
+        /* Style form button */
+        button[type="submit"] {
+            width: 100px;
+            height: 40px;
+            font-size: 16px;
+            margin-right: 10px;
+            padding: 5px;
+            outline: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: rgb(33,150,243);
+            color: #fff;
+            transition: ease-in-out;
+            margin: auto;
+        }
+
+        /* Style form button on hover */
+        button[type="submit"]:hover {
+            background-color: orange;
+        }
+
+        .headings h1{
+            text-align: center;
+            color: var(--secondary-color);
+        }
+
+        form{
+            margin-top: 20px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            height: 75vh;
+        }
+
+        p{
+            font-size: 15px;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
+        /* Style scrollbar */
+        /* Webkit (Safari, Chrome) */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2); 
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color); 
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color); 
+        }
+    </style>
+</head>
+<body>
+    <div class="nav1">
+        <div>
+          <h3>IIT Indore</h3>
+        </div>
+  
+        <div class="headings">
+          <a href="{% url 'admin_index' %}">Home</a>
+          <a href="{% url 'admin_requests' %}">Requests</a>
+          <a href="#" class="active">Edit</a>
+        </div>
+          
+          <div class="nav1-login">
+              {% if user.is_authenticated %}
+              <a href='{% url "logout" %}'>Logout</a>
+              {% else %}
+              <a href='{% url "login" %}'>Login</a>
+              {% endif %}
+          </div>
+    </div>
+  
+      <!-- Responsive navbar -->
+    <div class="navbar2">
+          <div class="ham">
+            <p><i class="fa-solid fa-bars"></i></p>
+          </div>
+          <div class="title">
+            <a href="/" class="lo">
+              <img src="" class="logo">
+              <h3>IIT Indore</h3>
+            </a>
+        </div>
+    </div>
+    <div class="side-bar">
+          <div id="close"><i class="fa-solid fa-xmark"></i></div>
+          <ul>
+              <li><a href="{% url 'admin_index' %}">Home</a></li>
+              <li><a href="{% url 'admin_requests' %}">Requests</a></li>
+              <li><a href="#" class="active">Edit</a></li>
+              <li><div class="nav1-login">
+                {% if user.is_authenticated %}
+                <a href='{% url "logout" %}'>Logout</a>
+                {% else %}
+                <a href='{% url "login" %}'>Login</a>
+                {% endif %}
+              </div></li>
+          </ul>
+    </div>
+    <div class="headings">
+        <h1>Edit Reservation</h1>
+    </div>
+    <div class="overflow">
+        <form method="post">
+            {% csrf_token %}
+            <!-- Display reservation fields -->
+            <!-- You may need to adjust the field types and placeholders -->
+            {{ form.as_p }}
+            <!-- Add other fields similarly -->
+            <button type="submit" onclick="return confirmAction()">Save</button>
+        </form>
+    </div>
+    <footer>
+        <div class="footer">
+          <div class="info">
+            <h4>IIT Indore</h4>
+          </div>
+          <div class="social">
+            <ul>
+              <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-linkedin"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+              <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+            </ul>
+          </div>
+          <div class="rights">
+            <p><i class="fa-solid fa-copyright"></i> Copyrights reserved.</p>
+          </div>
+        </div>
+        
+    </footer>
+    
+    <script src="{% static 'script.js' %}"></script>
+    <script>
+      function confirmAction() {
+        return confirm("Are you sure you want to proceed?");
+      }
+    </script>
+</body>
+</html>
