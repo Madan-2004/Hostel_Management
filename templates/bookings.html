@@ -258,14 +258,26 @@
 
       .username{
         display: flex;
-        flex-direction: row-reverse;
-        padding-right: 30px;
+        justify-content: space-between;
+        padding: 0px 20px;
       }
 
       .username h5{
         text-align: left;
         font-size: 18px;
         color: var(--secondary-color);
+      }
+
+      .username select{
+        height: 40px;
+        font-size: 16px;
+        color: var(--secondary-color);
+        border: 1.5px solid var(--secondary-color);
+        border-radius: 10px;
+        padding: 5px 10px;
+        outline: none;
+        cursor: pointer;
+        margin-bottom: 10px;
       }
       
     </style>
@@ -322,14 +334,23 @@
 
       {% if user.is_authenticated %}
         <div class="username">
+          <div class="filter">
+            <select id="reservationFilter">
+              <option value="all">All Reservations</option>
+              <option value="user">User Reservations</option>
+              <option value="project">Project Reservations</option>
+            </select>
+          </div>
+          
           <h5>Hello {{user.username}}</h5>
+          
         </div>
       {% endif %}
 
       {% if user_reservations or project_reservations %}
         <!--                User Reservations                 -->
         {% for reservation in user_reservations %}
-        <div class="container">
+        <div class="container user" id="user_reservations">
           <div class="card">
             <div class="box">
               <div class="content">
@@ -344,10 +365,6 @@
                     <p><span>Duration of Stay:</span>{{ reservation.length_of_stay }}</p>
                   </div>
                   <div class="right">
-                    <!-- <h5>Contact Details</h5>
-                    <p><span>Name:</span>{{ user.username }}</p>
-                    <p><span>Email:</span>{{ reservation.email }}</p>
-                    <p><span>Phone No:</span>{{ reservation.phone_number }}</p> -->
                     <p><span>Price:</span>Rs. {{ reservation.total_price }}</p>
                     {% if reservation.verified_status == '1' %}
                       {% if reservation.payment_status == '1' %}
@@ -360,6 +377,10 @@
                         <p><span>Verification status:</span><span style="color: green;">{{reservation.get_verified_status_display}}</span></p>
                     {% elif reservation.verified_status == '3' %}
                       <p><span>Verification status:</span><span style="color: red">{{reservation.get_verified_status_display}}</span></p>
+                    {% endif %}
+                    {% if reservation.payment_method == '2' %}
+                      <p><span>Project email:</span>{{ reservation.project_email }}</p>
+                      <p><span>Project description:</span>{{ reservation.project_description }}</p>
                     {% endif %}
                   </div>
                 </div>
@@ -387,7 +408,7 @@
 
         <!--                Project Reservations              -->
         {% for reservation in project_reservations %}
-        <div class="container">
+        <div class="container project" id="project_reservations">
           <div class="card">
             <div class="box">
               <div class="content">
@@ -403,7 +424,7 @@
                   </div>
                   <div class="right">
                     <h5>Contact Details</h5>
-                    <p><span>Name:</span>{{ user.username }}</p>
+                    <p><span>Name:</span>{{ reservation.user.username }}</p>
                     <p><span>Email:</span>{{ reservation.email }}</p>
                     <p><span>Phone No:</span>{{ reservation.phone_number }}</p>
                     <p><span>Price:</span>Rs. {{ reservation.total_price }}</p>
@@ -423,12 +444,12 @@
                 </div>
                 <div class="btn-row">
                   {% if reservation.verified_status == '1' %}
-                    {% if reservation.payment_status == '2' %}
+                    {% if reservation.payment_status == '3' %}
                         <a href="{% url 'download_invoice' reservation.id %}" class="btn btn-primary">Download Invoice</a>
                     {% else %}
                         <!-- Display pay now button -->
-                        <a href="" class="btn btn-primary">Accept</a>
-                        <a href="#" class="btn btn-primary">Reject</a>
+                        <a href="{% url 'accept_reservation' reservation.id %}" class="btn btn-primary">Accept</a>
+                        <a href="{% url 'reject_reservation' reservation.id %}" class="btn btn-primary">Reject</a>
                     {% endif %}
                   {% endif %}
                 </div>
@@ -483,5 +504,42 @@
         });
       });
     </script>
+  
+  <!-- JavaScript -->
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // Get reference to the select element
+      var reservationFilter = document.getElementById('reservationFilter');
+      // Add event listener to the select element
+      reservationFilter.addEventListener('change', function() {
+        // Call the filterReservations function whenever the select value changes
+        filterReservations();
+      });
+    });
+
+
+    function filterReservations() {
+      var reservationFilter = document.getElementById('reservationFilter').value;
+      var userReservations = document.querySelectorAll('.container.user');
+      var projectReservations = document.querySelectorAll('.container.project');
+
+      userReservations.forEach(function(userReservation) {
+        if (reservationFilter === 'all' || reservationFilter === 'user') {
+          userReservation.style.display = 'block';
+        } else {
+          userReservation.style.display = 'none';
+        }
+      });
+
+      projectReservations.forEach(function(projectReservation) {
+        if (reservationFilter === 'all' || reservationFilter === 'project') {
+          projectReservation.style.display = 'block';
+        } else {
+          projectReservation.style.display = 'none';
+        }
+      });
+    }
+  </script>
 </body>
 </html>

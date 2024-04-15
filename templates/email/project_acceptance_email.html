@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Accepted</title>
+</head>
+<body>
+    <h2>Your reservation has been accepted</h2>
+    <p>Dear {{ reservation.user.username }},</p>
+    <p>We are pleased to inform you that your reservation with the following details has been accepted by {{reservation.project_email}}:</p>
+    <ul>
+        <li>Number of Rooms: {{ reservation.number_of_rooms }}</li>
+        <li>Check-In Date: {{ reservation.check_in_date }}</li>
+        <li>Check-Out Date: {{ reservation.check_out_date }}</li>
+        <li>Number of Rooms: {{ reservation.number_of_rooms }}</li>
+    </ul>
+    <p>Thank you for choosing our service.</p>
+    <br>
+    <h5>Regards,</h5>
+    <p>Admin Team</p>
+</body>
+</html>

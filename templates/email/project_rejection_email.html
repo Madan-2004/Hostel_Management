@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Rejected</title>
+</head>
+<body>
+    <h2>Your reservation has been rejected</h2>
+    <p>Dear {{ reservation.user.username }},</p>
+    <p>We regret to inform you that your reservation for the project with the following details has been rejected by: {{ reservation.project_email }}</p>
+    <ul>
+        <li>Number of Rooms: {{ reservation.number_of_rooms }}</li>
+        <li>Check-In Date: {{ reservation.check_in_date }}</li>
+        <li>Check-Out Date: {{ reservation.check_out_date }}</li>
+    </ul>
+    <p>We apologize for any inconvenience caused.</p>
+</body>
+</html>

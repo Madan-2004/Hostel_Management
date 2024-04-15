@@ -14,19 +14,6 @@ class Room(models.Model):
     institute_use = models.BooleanField(default = False)
     def __str__(self):
         return f'Room number - {self.room_no}.'
-    
-class Booking(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
-    phone_number = models.CharField(max_length=15, default=9876543210)
-    email = models.EmailField(default='all@iiti.ac.in')
-    room = models.ForeignKey(Room, on_delete = models.CASCADE)
-
-    check_in = models.DateField()
-    check_out = models.DateField()
-
-    def __str__(self):
-        return f'{self.id} - {self.room}.'
 
 class Reservation(models.Model):
     PAYMENT_CHOICES = (
@@ -74,7 +61,21 @@ class Reservation(models.Model):
     room_numbers_list = property(get_room_numbers, set_room_numbers)
 
     def __str__(self):
-        return f'{self.id}. {self.user.username} has booked {self.number_of_rooms} rooms.'
+        return f'{self.user.username} -- {self.number_of_rooms} rooms.'
+    
+class Booking(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
+    phone_number = models.CharField(max_length=15, default=9876543210)
+    email = models.EmailField(default='all@iiti.ac.in')
+    room = models.ForeignKey(Room, on_delete = models.CASCADE)
+
+    check_in = models.DateField()
+    check_out = models.DateField()
+    reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name='bookings', default = None)
+
+    def __str__(self):
+        return f'{self.id} - {self.room}.'
 
 class Transaction(models.Model):
     txnid = models.CharField(primary_key = True, max_length = 20)
@@ -82,7 +83,7 @@ class Transaction(models.Model):
     error_Message = models.TextField()
     net_amount_debit = models.DecimalField(max_digits=10, decimal_places=2)
     phone = models.CharField(max_length = 15)
-    productinfo = models.CharField(max_length = 255)
+    productinfo = models.CharField(max_length = 255 ,default = "IIT INDORE")
     status = models.CharField(max_length = 10, default="failure")
     firstname = models.CharField(max_length = 64)
     lastname = models.CharField(max_length = 64)

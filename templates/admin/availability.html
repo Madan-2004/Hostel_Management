@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/0ceeca1f1f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'navbar.css' %}">
-    <title>Edit Reservation</title>
+    <title>Room Availability</title>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;800&display=swap");
         * {
@@ -31,72 +31,36 @@
             margin-top: auto; /* Push footer to bottom */
         }
 
-        /* Style the form container */
-        form {
-            margin: 0 auto;
-            max-width: 400px;
-            padding: 20px;
-            border: 1.5px solid var(--secondary-color);
+        .overflow{
+            height: 75vh;
+            overflow-y: auto;
+            overflow-x: auto;
+            width: 80%;
+            margin: 20px auto;
         }
 
-
-        /* Style form fields */
-        input[type="text"], input[type="email"], textarea, input[type="number"], select {
+        table {
             width: 100%;
-            outline: none;
-            margin-bottom: 20px;
-            padding: 10px;
-            margin-bottom: 10px;
+            border-collapse: collapse;
+        }
+
+        td {
             border: 1px solid var(--secondary-color);
-            border-radius: 4px;
-            box-sizing: border-box; /* Ensures padding and border are included in the width */
+            text-align: center;
+            padding: 8px;
         }
-
-        input[type="text"]:focus, input[type="email"]:focus, textarea:focus, input[type="number"]:focus, select:focus{
-            border: 2px solid var(--secondary-color);
-        }
-
-        /* Style form button */
-        button[type="submit"] {
-            width: 100px;
-            height: 40px;
-            font-size: 16px;
-            margin-right: 10px;
-            padding: 5px;
-            outline: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background: rgb(33,150,243);
+        th {
+            background-color: var(--secondary-color);
+            border: 1px solid #fff;
             color: #fff;
-            transition: ease-in-out;
-            margin: auto;
-        }
-
-        /* Style form button on hover */
-        button[type="submit"]:hover {
-            background-color: orange;
+            padding: 8px;
+            text-align: center;
         }
 
         .headings h1{
             text-align: center;
             color: var(--secondary-color);
         }
-
-        form{
-            margin-top: 20px;
-            margin-bottom: 20px;
-            overflow-y: auto;
-            height: 75vh;
-        }
-
-        p{
-            font-size: 15px;
-            color: var(--secondary-color);
-            margin-bottom: 5px;
-        }
-
-        /* Style scrollbar */
         /* Webkit (Safari, Chrome) */
         ::-webkit-scrollbar {
             width: 10px;
@@ -124,8 +88,7 @@
         <div class="headings">
           <a href="{% url 'admin_index' %}">Home</a>
           <a href="{% url 'admin_requests' %}">Requests</a>
-          <a href="{% url 'availability' %}">Availability</a>
-          <a href="#" class="active">Edit</a>
+          <a href="{% url 'availability' %}" class="active">Availability</a>
         </div>
           
           <div class="nav1-login">
@@ -154,8 +117,7 @@
           <ul>
               <li><a href="{% url 'admin_index' %}">Home</a></li>
               <li><a href="{% url 'admin_requests' %}">Requests</a></li>
-              <li><a href="{% url 'availability' %}">Availability</a></li>
-              <li><a href="#" class="active">Edit</a></li>
+              <li><a href="{% url 'availability' %}" class="active">Availability</a></li>
               <li><div class="nav1-login">
                 {% if user.is_authenticated %}
                 <a href='{% url "logout" %}'>Logout</a>
@@ -166,20 +128,27 @@
           </ul>
     </div>
     <div class="headings">
-        <h1>Edit Reservation</h1>
+        <h1>Rooms Availability</h1>
     </div>
     <div class="overflow">
-        <form method="post">
-            {% csrf_token %}
-            <!-- Display reservation fields -->
-            <!-- You may need to adjust the field types and placeholders -->
-            {{ form.as_p }}
-            <!-- Add other fields similarly -->
-            <!-- <div id="transaction-form" style="display: none;"> 
-              {{ transaction_form.as_p }}
-          </div> -->
-            <button type="submit" onclick="return confirmAction()">Save</button>
-        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Bookings</th>
+                    <th>Available Rooms</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for date, data in availability_data.items %}
+                <tr>
+                    <td>{{ date }}</td>
+                    <td>{{ data.bookings }}</td>
+                    <td>{{ data.available_rooms }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     <footer>
         <div class="footer">
@@ -202,29 +171,5 @@
     </footer>
     
     <script src="{% static 'script.js' %}"></script>
-    <script>
-      function confirmAction() {
-        return confirm("Are you sure you want to proceed?");
-      }
-      document.addEventListener('DOMContentLoaded', function() {
-        const paymentStatusSelect = document.getElementById('id_payment_status');
-        const transactionForm = document.getElementById('transaction-form');
-    
-        // Function to toggle transaction form visibility based on payment status
-        function toggleTransactionForm() {
-            if (paymentStatusSelect.value === '2') { // If payment status is 'Done'
-                transactionForm.style.display = 'block'; // Show the transaction form
-            } else {
-                transactionForm.style.display = 'none'; // Hide the transaction form
-            }
-        }
-    
-        // Call the function initially to set initial state based on payment status
-        toggleTransactionForm();
-    
-        // Listen for changes in the payment status dropdown
-        paymentStatusSelect.addEventListener('change', toggleTransactionForm);
-    });
-    </script>
 </body>
 </html>

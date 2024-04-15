@@ -136,6 +136,7 @@
         <div class="headings">
           <a href="{% url 'admin_index' %}">Home</a>
           <a href="{% url 'admin_requests' %}">Requests</a>
+          <a href="{% url 'availability' %}">Availability</a>
           <a href="" class="active">View</a>
         </div>
           
@@ -165,6 +166,7 @@
           <ul>
               <li><a href="{% url 'admin_index' %}">Home</a></li>
               <li><a href="{% url 'admin_requests' %}">Requests</a></li>
+              <li><a href="{% url 'availability' %}">Availability</a></li>
               <li><a href="#" class="active">View</a></li>
               <li><div class="nav1-login">
                 {% if user.is_authenticated %}

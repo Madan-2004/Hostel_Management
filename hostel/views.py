@@ -145,7 +145,7 @@ def bookings(request):
     user_reservations = Reservation.objects.filter(email = email)
     project_reservations = Reservation.objects.filter(project_email = email,  verified_status = '1')
 
-    return render(request, "bookings.html", {'user_reservations': user_reservations, 'project_reservations': project_reservations})
+    return render(request, 'bookings.html', {'user_reservations': user_reservations, 'project_reservations': project_reservations})
 
 def signup(request):
     if request.method == "POST":
@@ -184,6 +184,7 @@ def book_room(request):
         extra_data = social_account.extra_data
             
         # Extract username and email from extra_data
+        name = extra_data.get('name', '')
         email = extra_data.get('email', '')
 
     if request.method == 'POST':
@@ -209,18 +210,7 @@ def book_room(request):
         user = User.objects.get(username=user_name.username)
         length_of_stay = (datetime.strptime(check_out, "%Y-%m-%d") - datetime.strptime(check_in, "%Y-%m-%d")).days
         for r in available_room_nos:
-            room_info = Room.objects.get(room_no = r)
             amount += length_of_stay * int(room_rent)
-            new_booking = Booking.objects.create(
-                user = user_name,
-                phone_number = phoneno,
-                email = email,
-                room = room_info,
-                check_in = check_in,
-                check_out = check_out
-            )
-
-            new_booking.save()
 
         total_price = int(amount) + (0.12*int(amount))
 
@@ -246,6 +236,20 @@ def book_room(request):
             reservation.save()
 
         reservation.save()
+
+        for r in available_room_nos:
+            room_info = Room.objects.get(room_no = r)
+            new_booking = Booking.objects.create(
+                user = user_name,
+                phone_number = phoneno,
+                email = email,
+                room = room_info,
+                check_in = check_in,
+                check_out = check_out,
+                reservation = reservation
+            )
+
+            new_booking.save()
 
         return redirect('bookings')
 
@@ -278,7 +282,8 @@ def book_room(request):
         'capacity': capacity,
         'price': int(amount)+(int(amount)*0.12), #GST.
         'available_room_nos': available_room_nos,
-        'email': email
+        'email': email,
+        'name': name
     })
 
 
@@ -522,6 +527,43 @@ def admin_requests(request):
     
     return render(request, 'admin/admin_requests.html', {'quantity': quantity, 'unverified_reservations': unverified_reservations})
 
+
+from django.utils import timezone
+@login_required
+@admin_required(['madan'])
+def availability(request):
+    # Get today's date
+    today = timezone.now().date()
+    
+    # Retrieve bookings for the next 30 days
+    end_date = today + timezone.timedelta(days=30)
+    bookings = Booking.objects.filter(check_in__range=[today, end_date])
+    
+    # Create a dictionary to store availability data for each day
+    availability_data = {}
+    
+    # Iterate over each day between today and the end date
+    current_date = today
+    while current_date <= end_date:
+        # Count the number of bookings for the current day
+        bookings_on_date = bookings.filter(check_in=current_date).count()
+        
+        # Calculate the number of available rooms
+        total_rooms = Room.objects.count()
+        available_rooms = total_rooms - bookings_on_date
+        
+        # Store availability data for the current day in the dictionary
+        availability_data[current_date] = {
+            'bookings': bookings_on_date,
+            'available_rooms': available_rooms
+        }
+        
+        # Move to the next day
+        current_date += timezone.timedelta(days=1)
+    
+    # Render the availability template with availability data
+    return render(request, 'admin/availability.html', {'availability_data': availability_data})
+
 @login_required
 @admin_required(['madan'])
 def view_reservation(request, reservation_id):
@@ -550,20 +592,162 @@ def view_reservation(request, reservation_id):
             return HttpResponseBadRequest("Invalid action")
     return render(request, 'admin/view_reservation.html', {'reservation': reservation})
 
-from .forms import ReservationForm
+from .forms import ReservationForm, TransactionForm
+
+import copy
+from django.db import transaction as db_transaction
 
 @login_required
 @admin_required(['madan'])
 def edit_reservation(request, reservation_id):
-    reservation = get_object_or_404(Reservation, id=reservation_id)
+    initial_reservation = get_object_or_404(Reservation, id=reservation_id)
+    reservation = copy.deepcopy(initial_reservation) 
     if request.method == 'POST':
-        form = ReservationForm(request.POST, instance=reservation)
+        form = ReservationForm(request.POST, instance=initial_reservation)
         if form.is_valid():
-            form.save()
+            new_reservation = form.save(commit=False)
+
+            # Check if room numbers have changed
+            if reservation.room_numbers != new_reservation.room_numbers:
+                with db_transaction.atomic():
+                    # Delete existing bookings associated with the old room numbers
+                    old_room_numbers = reservation.room_numbers_list
+                    for room_number in old_room_numbers:
+                        bookings_to_delete = Booking.objects.filter(
+                            room__room_no=room_number,
+                            reservation = reservation
+                        )
+                        bookings_to_delete.delete()
+
+                    # Create new bookings for the new room numbers
+                    new_room_numbers = new_reservation.room_numbers_list
+                    for room_number in new_room_numbers:
+                        new_booking = Booking.objects.create(
+                            user=new_reservation.user,
+                            phone_number=new_reservation.phone_number,
+                            email=new_reservation.email,
+                            room=Room.objects.get(room_no=room_number),
+                            check_in=new_reservation.check_in_date,
+                            check_out=new_reservation.check_out_date,
+                            reservation = reservation
+                        )
+                        new_booking.save()
+                    
+                    new_reservation.number_of_rooms = len(new_room_numbers)
+                    new_reservation.room_numbers = ','.join(new_room_numbers)
+                    new_reservation.length_of_stay = (new_reservation.check_out_date - new_reservation.check_in_date).days
+                    tariff_per_day = new_reservation.tariff_per_day
+                    length_of_stay = new_reservation.length_of_stay
+                    cost = (new_reservation.length_of_stay * new_reservation.number_of_rooms)*tariff_per_day
+                    gst = float(cost)*0.12
+                    new_reservation.price = cost
+                    new_reservation.gst = gst
+                    new_reservation.total_price = float(cost)+gst
+
+            if reservation.number_of_rooms != new_reservation.number_of_rooms:
+                with db_transaction.atomic():
+                    # Calculate the difference in the number of rooms
+                    diff_rooms = new_reservation.number_of_rooms - reservation.number_of_rooms
+
+                    if diff_rooms > 0:  # Add new rooms
+                        available_rooms = []
+                        room_list = Room.objects.all()
+                        checkin_date = new_reservation.check_in_date
+                        checkout_date = new_reservation.check_out_date
+
+                        # Find available rooms for booking
+                        for room in room_list:
+                            if check_availability(room, checkin_date, checkout_date) and len(available_rooms) < diff_rooms and not room.institute_use:
+                                available_rooms.append(room)
+
+                        if len(available_rooms) == diff_rooms:
+                            # Make bookings for the new rooms
+                            for room in available_rooms:
+                                new_booking = Booking.objects.create(
+                                    user=new_reservation.user,
+                                    phone_number=new_reservation.phone_number,
+                                    email=new_reservation.email,
+                                    room=room,
+                                    check_in=new_reservation.check_in_date,
+                                    check_out=new_reservation.check_out_date,
+                                    reservation=reservation
+                                )
+                                
+                            # Update reservation details
+                            new_reservation.room_numbers_list = [booking.room.room_no for booking in Booking.objects.filter(reservation=reservation)]
+                            new_reservation.room_numbers_list = new_reservation.get_room_numbers()                
+                            new_reservation.length_of_stay = (new_reservation.check_out_date - new_reservation.check_in_date).days
+                            tariff_per_day = new_reservation.tariff_per_day
+                            length_of_stay = new_reservation.length_of_stay
+                            cost = (length_of_stay * new_reservation.number_of_rooms) * tariff_per_day
+                            gst = float(cost) * 0.12
+                            new_reservation.price = cost
+                            new_reservation.gst = gst
+                            new_reservation.total_price = float(cost) + gst  
+
+                    elif diff_rooms < 0:  # Delete existing rooms
+                        with db_transaction.atomic():
+                            rooms_to_delete = reservation.room_numbers_list[diff_rooms:]
+                            for room_number in rooms_to_delete:
+                                booking_to_delete = Booking.objects.filter(room__room_no=room_number, reservation=reservation)
+                                booking_to_delete.delete()
+
+                        # Update reservation details
+                        new_reservation.room_numbers_list = [booking.room.room_no for booking in Booking.objects.filter(reservation=reservation)]
+                        new_reservation.room_numbers_list = new_reservation.get_room_numbers()                
+                        new_reservation.length_of_stay = (new_reservation.check_out_date - new_reservation.check_in_date).days
+                        tariff_per_day = new_reservation.tariff_per_day
+                        length_of_stay = new_reservation.length_of_stay
+                        cost = (length_of_stay * new_reservation.number_of_rooms) * tariff_per_day
+                        gst = float(cost) * 0.12
+                        new_reservation.price = cost
+                        new_reservation.gst = gst
+                        new_reservation.total_price = float(cost) + gst                
+
+            # Check if check-in date has changed
+            if reservation.check_in_date != new_reservation.check_in_date:
+                with db_transaction.atomic():
+                    room_numbers = reservation.room_numbers_list
+                    for room_no in room_numbers:
+                        room_details = Room.objects.get(room_no=room_no)
+                        bookings_to_update = Booking.objects.filter(room=room_details, reservation = reservation)
+                        for booking in bookings_to_update:
+                            booking.check_in = new_reservation.check_in_date
+                            booking.save()
+                new_reservation.length_of_stay = (new_reservation.check_out_date - new_reservation.check_in_date).days
+                tariff_per_day = new_reservation.tariff_per_day
+                length_of_stay = new_reservation.length_of_stay
+                cost = (length_of_stay*new_reservation.number_of_rooms)*tariff_per_day
+                gst = float(cost)*0.12
+                new_reservation.price = cost
+                new_reservation.gst = gst
+                new_reservation.total_price = float(cost)+gst
+
+            # Check if check-out date has changed
+            if reservation.check_out_date != new_reservation.check_out_date:
+                with db_transaction.atomic():
+                    room_numbers = reservation.room_numbers_list
+                    for room_no in room_numbers:
+                        room_details = Room.objects.get(room_no=room_no)
+                        bookings_to_update = Booking.objects.filter(room=room_details, reservation = reservation)
+                        for booking in bookings_to_update:
+                            booking.check_out = new_reservation.check_out_date
+                            booking.save()
+                new_reservation.length_of_stay = (new_reservation.check_out_date - new_reservation.check_in_date).days
+                tariff_per_day = new_reservation.tariff_per_day
+                length_of_stay = new_reservation.length_of_stay
+                cost = (length_of_stay*new_reservation.number_of_rooms)*tariff_per_day
+                gst = float(cost)*0.12
+                new_reservation.price = cost
+                new_reservation.gst = gst
+                new_reservation.total_price = float(cost)+gst
+                    
+            new_reservation.save()
             return redirect('admin_index')  # Redirect to the admin home page
     else:
         form = ReservationForm(instance=reservation)
     return render(request, 'admin/edit_reservation.html', {'form': form, 'reservation': reservation})
+
 
 def send_project_payment_email(reservation):
     subject = 'Confirmation for room bookings'
@@ -582,6 +766,22 @@ def send_project_payment_email(reservation):
 
     # Send email
     msg.send()
+
+def accept_reservation(request, reservation_id):
+    reservation = Reservation.objects.get(id=reservation_id)
+    reservation.payment_status = '3'  # Update payment status
+    reservation.save()
+    # Send acceptance email
+    send_reservation_email(reservation, 'Reservation Accepted', 'email/project_acceptance_email.html')
+    return redirect('bookings')
+
+def reject_reservation(request, reservation_id):
+    reservation = Reservation.objects.get(id=reservation_id)
+    # Send rejection email
+    send_reservation_email(reservation, 'Reservation Rejected', 'email/project_rejection_email.html')
+    delete_booking(request, reservation_id) # Delete the reservation
+    return redirect('bookings')
+
 
 def send_booking_confirmation_email(reservation):
     subject = 'Booking Request Confirmation'
@@ -619,5 +819,20 @@ def send_booking_rejection_email(reservation):
     # Send email
     msg.send()
 
+def send_reservation_email(reservation, subject, template):
+    from_email = settings.EMAIL_HOST_USER
+    to_email = reservation.email
 
+    # Render HTML content from template
+    html_content = render_to_string(template, {'reservation': reservation})
+
+    # Create a text/plain version of the HTML email (for clients that do not support HTML emails)
+    text_content = strip_tags(html_content)
+
+    # Create EmailMultiAlternatives object to include both HTML and text content
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+    msg.attach_alternative(html_content, "text/html")
+
+    # Send email
+    msg.send()
 

@@ -1,7 +1,12 @@
 # forms.py
 from django import forms
-from .models import Reservation
+from .models import Reservation, Transaction
 
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ['txnid', 'net_amount_debit', 'phone', 'firstname', 'lastname', 'addedon', 'email', 'amount', 'payuMoneyId', 'mihpayid']
+        
 class ReservationForm(forms.ModelForm):
     class Meta:
         model = Reservation
