@@ -22,16 +22,13 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from paywix.payu import Payu
 from django.conf import settings
 import time, urllib
 
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from paywix.payu import Payu
 from hashlib import sha512
 from django.contrib.auth.models import User
-from allauth.socialaccount.models import SocialAccount
 # import uuid
 
 # Retrieve the failure URL from settings
@@ -42,7 +39,6 @@ merchant_salt = payu_config.get('merchant_salt')
 furl = settings.PAYU_CONFIG.get('furl')
 surl = settings.PAYU_CONFIG.get('surl')
 mode = payu_config.get('mode')
-payu = Payu(merchant_key, merchant_salt, mode)
 
 class RoomList(ListView):
     model = Room

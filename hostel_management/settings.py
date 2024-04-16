@@ -55,8 +55,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'hostel.apps.HostelConfig',
-    'paywix',
-    'payments'
+    # 'paywix',
+    # 'payments'
 ]
 
 AUTHENTICATION_BACKENDS = [
