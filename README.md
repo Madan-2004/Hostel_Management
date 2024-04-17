@@ -1,15 +1,17 @@
 # Guest House/Hostel Booking Software
 
 ## Overview
-This project aims to develop a custom software solution tailored for the Research and Development Department (R&D) of IIT Indore. The software enables employees to efficiently manage and track data related to grants, sanctions, and expenses for various projects. It facilitates the generation of month-wise balance sheets, annual balance sheets, and other custom documents such as UCR and UCNR for each project. The software ensures seamless data management and eliminates ambiguity between different projects, enhancing the efficiency and professionalism of the department's operations.
+The hostel booking website is an online platform designed to streamline the process of booking accommodation in hostels for guests. It aims to provide a user-friendly interface for both guests and administrators to manage room bookings efficiently.
 
 ## Features
-- Secure storage and management of grant, sanction, and expense data for each project in the local file system preventing the interruptions and interactions between two project files.
-- Automated generation of month-wise balance sheets and annual balance sheets.
-- Custom document generation, including UCR and UCNR, tailored to project requirements.
+- Streamline the booking process to save time for both guests and administrators.
+- Provide a seamless and intuitive user experience for guests browsing and booking rooms.
+- Users can search for available rooms based on their check-in and check-out dates, capacity, and room type preferences.
+- Users can view their past reservations and booking details on the website. They can also manage their bookings or cancel existing reservations.
+- Administrators have access to a dashboard for managing room listings, bookings, and user accounts. They can add, edit, or delete room listings, view and manage bookings made through the website, and monitor user activity.
+- •	The website integrates with the PayU payment gateway for secure online transactions. Users can make payments for their bookings through the website, enhancing the convenience of the booking process.
 - Role-based access control to ensure data privacy and security.
 - User-friendly interface for easy navigation and data entry.
-- Integration with existing systems or databases for seamless data exchange.
 
 ## Installation
 To deploy the software, follow these steps:
