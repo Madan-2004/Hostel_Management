@@ -459,7 +459,7 @@
           <div id="close"><i class="fa-solid fa-xmark"></i></div>
           <ul>
               <li><a href="{% url 'admin_index' %}">Home</a></li>
-              <a href="{% url 'admin_requests' %}">Requests</a>
+              <li><a href="{% url 'admin_requests' %}">Requests</a></li>
               <li><a href="{% url 'availability' %}">Availability</a></li>
               <li><div class="nav1-login">
                 {% if user.is_authenticated %}
@@ -536,10 +536,10 @@
             </div> -->
             <div class="email"><input type="text" placeholder="User Name" id="user-name" name="username"><i class="fa-solid fa-envelope"></i></div>
             <div class="password"><input type="password" id="pass" placeholder="Password" name="password" autocomplete="new-password"><span onclick="toggleShow()"><i class="fa-solid fa-lock"></i></span></div>
-            <div class="forget">
+            <!-- <div class="forget">
                 <p><input type="checkbox"> Remember me</p>
                 <p><a href="">Forgot Password?</a></p>
-            </div>
+            </div> -->
             <button type="submit" class="submit">Sign in</button>
         </form>
     </div>

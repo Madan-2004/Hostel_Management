@@ -17,6 +17,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -29,7 +30,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from hashlib import sha512
 from django.contrib.auth.models import User
-# import uuid
 
 # Retrieve the failure URL from settings
 
@@ -137,7 +137,11 @@ def not_available(request, rem):
 
 @login_required(login_url='/login/')
 def bookings(request):
-    email = SocialAccount.objects.get(user=request.user).extra_data.get('email', '')
+    email = None
+    try:
+        email = SocialAccount.objects.get(user=request.user).extra_data.get('email', '')
+    except:
+        social_account = None
     user_reservations = Reservation.objects.filter(email = email)
     project_reservations = Reservation.objects.filter(project_email = email,  verified_status = '1')
 
@@ -473,6 +477,7 @@ def send_invoice_email(transaction):
 # Admin Login
 from django.contrib.auth.decorators import login_required
 from .decorators import admin_required
+admin_users = settings.ALLOWED_ADMIN_USERNAMES
 
 def admin_login(request):
     if request.method == "POST":
@@ -488,15 +493,15 @@ def admin_login(request):
             messages.error(request,'Invalid Credentials')
     return render(request, "admin/admin_login.html")
 
-@login_required
-@admin_required(['madan'])
+@login_required(login_url='/login/')
+@admin_required(admin_users)
 def admin_index(request):
     reservations = Reservation.objects.all()
 
     return render(request, 'admin/admin_index.html', {'reservations': reservations})
 
-@login_required
-@admin_required(['madan'])
+@login_required(login_url='/login/')
+@admin_required(admin_users)
 def admin_requests(request):
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -525,15 +530,19 @@ def admin_requests(request):
 
 
 from django.utils import timezone
-@login_required
-@admin_required(['madan'])
+@login_required(login_url='/login/')
+@admin_required(admin_users)
 def availability(request):
     # Get today's date
     today = timezone.now().date()
     
     # Retrieve bookings for the next 30 days
-    end_date = today + timezone.timedelta(days=30)
-    bookings = Booking.objects.filter(check_in__range=[today, end_date])
+    end_date = today + timedelta(days=30)
+    bookings_check_in = Booking.objects.filter(check_in__range=[today, end_date], reservation__verified_status='1')
+    bookings_check_out = Booking.objects.filter(check_out__range=[today, end_date], reservation__verified_status='1')
+
+    # Combine the two querysets using the | operator
+    bookings = bookings_check_in | bookings_check_out
     
     # Create a dictionary to store availability data for each day
     availability_data = {}
@@ -542,7 +551,7 @@ def availability(request):
     current_date = today
     while current_date <= end_date:
         # Count the number of bookings for the current day
-        bookings_on_date = bookings.filter(check_in=current_date).count()
+        bookings_on_date = bookings.filter(check_in__lte=current_date, check_out__gte=current_date).count()
         
         # Calculate the number of available rooms
         total_rooms = Room.objects.count()
@@ -555,13 +564,13 @@ def availability(request):
         }
         
         # Move to the next day
-        current_date += timezone.timedelta(days=1)
+        current_date += timedelta(days=1)
     
     # Render the availability template with availability data
     return render(request, 'admin/availability.html', {'availability_data': availability_data})
 
 @login_required
-@admin_required(['madan'])
+@admin_required(admin_users)
 def view_reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, id=reservation_id)
     if request.method == 'POST':
@@ -594,7 +603,7 @@ import copy
 from django.db import transaction as db_transaction
 
 @login_required
-@admin_required(['madan'])
+@admin_required(admin_users)
 def edit_reservation(request, reservation_id):
     initial_reservation = get_object_or_404(Reservation, id=reservation_id)
     reservation = copy.deepcopy(initial_reservation) 

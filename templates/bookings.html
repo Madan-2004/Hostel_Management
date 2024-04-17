@@ -445,6 +445,7 @@
                 <div class="btn-row">
                   {% if reservation.verified_status == '1' %}
                     {% if reservation.payment_status == '3' %}
+                        <a href="{% url 'pay_now' reservation.id %}" class="btn btn-primary">Pay Now</a>
                         <a href="{% url 'download_invoice' reservation.id %}" class="btn btn-primary">Download Invoice</a>
                     {% else %}
                         <!-- Display pay now button -->

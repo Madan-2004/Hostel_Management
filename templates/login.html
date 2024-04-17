@@ -764,15 +764,12 @@
                 {% csrf_token %}
                 <h3>Login</h3>
                 <a href="{% url 'admin_login' %}">Login as Admin</a>
-                <!-- <div class="gmail">
-                    <button>Login using Institue Email id</button>
-                </div> -->
                 <div class="email"><input type="text" placeholder="User Name" id="user-name" name="username"><i class="fa-solid fa-envelope"></i></div>
                 <div class="password"><input type="password" id="pass" placeholder="Password" name="password" autocomplete="new-password"><span onclick="toggleShow()"><i class="fa-solid fa-lock"></i></span></div>
-                <div class="forget">
+                <!-- <div class="forget">
                     <p><input type="checkbox"> Remember me</p>
                     <p><a href="">Forgot Password?</a></p>
-                </div>
+                </div> -->
                 <button type="submit" class="submit">Sign in</button>
 
                 <p class="or" style="font-size: 14px; color: gray;">Or</p>
@@ -784,38 +781,14 @@
             <form action="{% url 'signup' %}" method="post" id="register">
               {% csrf_token %}
             <h3>Register</h3>
-            <!-- <div class="gmail">
-                <button>Login using Institue Email id</button>
-            </div> -->
             <div class="email"><input type="email" id="username" placeholder="Email ID" name="email"><i class="fa-solid fa-envelope"></i></div>
             <div class="password"><input type="password" id="password1" placeholder=" New Password" name="password1" id="newpass"><span class="new" onclick="toggleShow1()"><i class="fa-solid fa-lock"></i></span></div>
             <div class="password" style="margin-bottom: 20px;"><input type="password" id="password2" placeholder="Confirm Password" id="retypepass" name="password2"><span class="retype" onclick="toggleShow2()"><i class="fa-solid fa-lock"></i></span></div>
-            <!-- <div class="forget">
-                <p><input type="checkbox"> Remember me</p>
-                <p><a href="">Forgot Password?</a></p>
-            </div> -->
             <button type="submit" class="submit">Register</button>
             <p>Already have an account? <a href="#" id="clicklog">Login</a></p>
             </form>
         </div>
       </div>
-
-      <!-- <div class="form" id="student">
-        <form action='/login/' method='post'>
-            {% csrf_token %}                                             
-            <h4>Login</h4>
-            <div>
-                <label for="name">Username</label>
-                <input type="text" placeholder="Username" id="contactName" name='username'>
-            </div>
-            <div>
-                <label for="password">Password</label>
-                <input type="password" placeholder="Password" id="password" name='password'>
-                <span onclick="toggleShow();" id="show"><i class="fa-solid fa-eye-slash"></i></span>
-            </div>
-            <button type="submit" id="submit">Login</button>
-        </form>
-    </div> -->
 
     <footer>
         <div class="footer">
