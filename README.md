@@ -26,7 +26,7 @@ To deploy the software, follow these steps:
 - Other dependencies specified in the requirements.txt file
 
 ## Documentation
-- Here is the [Documentation]([https://docs.google.com/document/d/1QzOdc44S_czsaDDKoQ6T-eGnAxf67zSx/edit?usp=drive_link&ouid=106569481814732339512&rtpof=true&sd=true](https://docs.google.com/document/d/1nOFc1eYQplbagDYmUPxsBrZ9KbBtc7qM/edit?usp=drive_link&ouid=106569481814732339512&rtpof=true&sd=true)) of the software
+- Here is the [Documentation](https://docs.google.com/document/d/1nOFc1eYQplbagDYmUPxsBrZ9KbBtc7qM/edit?usp=drive_link&ouid=106569481814732339512&rtpof=true&sd=true) of the software
 
 ## Contributing
 Contributions to the project are welcome! If you have suggestions for improvements or feature requests, please open a pull request or raise an issue in the repository.
